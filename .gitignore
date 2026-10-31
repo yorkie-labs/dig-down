@@ -7,3 +7,7 @@ public/models/polyfork/
 assets/character/*tripo*
 # Tripo-derived (decimated) puppy from the 3D spike, unused now and non-commercial
 public/models/puppy.glb
+
+# Claude Code runtime state
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
