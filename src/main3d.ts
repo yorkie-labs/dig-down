@@ -1245,7 +1245,8 @@ function hitFrame(k: number, frames: number) {
   return frames - 1;
 }
 const sheets: Partial<Record<SideFrame, { tex: THREE.Texture; meta: SheetMeta }>> = {};
-for (const f of ['walk', 'stand', 'hit', 'slam'] as SideFrame[]) {
+// only the sheets that exist (public/sprites/anim): probing others logged 404s in the console
+for (const f of ['walk', 'hit'] as SideFrame[]) {
   fetch(`sprites/anim/${f}.json`).then((r) => (r.ok ? r.json() : null)).then((meta: SheetMeta | null) => {
     if (!meta) return;
     texLoader.load(`sprites/anim/${f}-sheet.png`, (tex) => {
