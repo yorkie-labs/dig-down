@@ -88,10 +88,10 @@
     #overlay-title { color: var(--ink); text-shadow: none; font-size: var(--fs-xl); margin: 0; line-height: 1.1; }
     #res-stage { margin: 2px 0 0; color: var(--ink); font-size: var(--fs-s); opacity: .7; }
     #res-stars { margin: 4px 0 0; font-size: 52px; line-height: 1; letter-spacing: 4px; color: var(--gold);
-      -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 0 3px 0 var(--ink); }
+      text-shadow: 1.5px 0.0px 0 var(--ink), 1.06px 1.06px 0 var(--ink), 0.0px 1.5px 0 var(--ink), -1.06px 1.06px 0 var(--ink), -1.5px 0.0px 0 var(--ink), -1.06px -1.06px 0 var(--ink), -0.0px -1.5px 0 var(--ink), 1.06px -1.06px 0 var(--ink), 0 3px 0 var(--ink); }
     #res-stars .dim { color: #e7dcc0; }
     #res-stars .new, #res-hero .new { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 1px 7px; border-radius: 8px;
-      background: var(--pink); color: var(--white); font-size: var(--fs-xs); letter-spacing: 0; -webkit-text-stroke: 0; text-shadow: none; }
+      background: var(--pink); color: var(--white); font-size: var(--fs-xs); letter-spacing: 0; text-shadow: none; }
     #res-hero { display: flex; gap: 10px; width: 100%; margin: 12px 0 0; }
     #res-hero div { flex: 1; min-width: 0; padding: 6px 4px; border: 3px solid var(--ink); border-radius: 14px; background: var(--white); color: var(--ink); }
     #res-hero small { display: block; font-size: var(--fs-xs); opacity: .7; }
@@ -121,7 +121,7 @@
       #overlay .card { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 16px); padding: 10px 16px; }
       #overlay-title { font-size: var(--fs-l); }
       #res-stage { font-size: var(--fs-xs); }
-      #res-stars { font-size: 28px; -webkit-text-stroke-width: 1.5px; text-shadow: 0 2px 0 var(--ink); }
+      #res-stars { font-size: 28px; text-shadow: 1.0px 0.0px 0 var(--ink), 0.71px 0.71px 0 var(--ink), 0.0px 1.0px 0 var(--ink), -0.71px 0.71px 0 var(--ink), -1.0px 0.0px 0 var(--ink), -0.71px -0.71px 0 var(--ink), -0.0px -1.0px 0 var(--ink), 0.71px -0.71px 0 var(--ink), 0 2px 0 var(--ink); }
       #res-hero { margin-top: 6px; }
       #res-hero div { display: flex; align-items: baseline; justify-content: center; gap: 8px; padding: 2px 4px; }
       #res-hero b { font-size: var(--fs-l); }
@@ -165,10 +165,10 @@
     #title[hidden] { display: none; }
     #title.leaving { opacity: 0; transform: translateY(-30px); }
     #title .logo { font-size: clamp(56px, 13vw, 120px); line-height: 1; color: var(--cream);
-      -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; text-shadow: 0 8px 0 var(--ink); transform: rotate(-4deg); }
+      text-shadow: 3.5px 0.0px 0 var(--ink), 3.23px 1.34px 0 var(--ink), 2.47px 2.47px 0 var(--ink), 1.34px 3.23px 0 var(--ink), 0.0px 3.5px 0 var(--ink), -1.34px 3.23px 0 var(--ink), -2.47px 2.47px 0 var(--ink), -3.23px 1.34px 0 var(--ink), -3.5px 0.0px 0 var(--ink), -3.23px -1.34px 0 var(--ink), -2.47px -2.47px 0 var(--ink), -1.34px -3.23px 0 var(--ink), -0.0px -3.5px 0 var(--ink), 1.34px -3.23px 0 var(--ink), 2.47px -2.47px 0 var(--ink), 3.23px -1.34px 0 var(--ink), 0 8px 0 var(--ink); transform: rotate(-4deg); }
     #title .logo .d { color: var(--gold); }
     #title .logo .w { color: #8fd8ff; }
-    #title .sub { margin: 22px 0 0; font-size: clamp(var(--fs-m), 3.5vw, var(--fs-l)); color: var(--cream); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; }
+    #title .sub { margin: 22px 0 0; font-size: clamp(var(--fs-m), 3.5vw, var(--fs-l)); color: var(--cream); text-shadow: 1.8px 0.0px 0 var(--ink), 1.27px 1.27px 0 var(--ink), 0.0px 1.8px 0 var(--ink), -1.27px 1.27px 0 var(--ink), -1.8px 0.0px 0 var(--ink), -1.27px -1.27px 0 var(--ink), -0.0px -1.8px 0 var(--ink), 1.27px -1.27px 0 var(--ink); }
     /* UI review 7/8: the list sits on one solid panel (cream, ink border) with a header row for the
        ★ total; translucent rows let the board's blocks show through and read as noise */
     #stage-panel { pointer-events: auto; display: flex; flex-direction: column; margin-top: 14px; width: min(420px, calc(100vw - 32px));
@@ -382,13 +382,15 @@
       #pause button { padding: 6px 10px; font-size: var(--fs-m); }
     }
     @keyframes hurt { 20% { transform: scale(1.35) rotate(-8deg); filter: brightness(1.6); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
-      /* loading screen */
+      /* Text outlines are ring text-shadows, not -webkit-text-stroke: Safari/iOS ignore paint-order on
+       HTML text, so the stroke was drawn over the glyphs (half inside) and Korean letters looked
+       doubled and broken on iPhones and Mac Safari. */
+    /* loading screen */
     #loading { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 18px; background: radial-gradient(ellipse at 50% 30%, #2f6fb5 0%, #163d7a 55%, #0b1a3d 100%); color: #fdf6e3;
       font-family: 'Jua', system-ui, sans-serif; transition: opacity .45s; }
     #loading.done { opacity: 0; pointer-events: none; }
-    #loading .ld-logo { font-size: clamp(48px, 12vw, 96px); line-height: 1; -webkit-text-stroke: 6px #1b2238; paint-order: stroke fill;
-      text-shadow: 0 6px 0 #1b2238; transform: rotate(-4deg); }
+    #loading .ld-logo { font-size: clamp(48px, 12vw, 96px); line-height: 1; text-shadow: 3.5px 0.0px 0 #1b2238, 3.23px 1.34px 0 #1b2238, 2.47px 2.47px 0 #1b2238, 1.34px 3.23px 0 #1b2238, 0.0px 3.5px 0 #1b2238, -1.34px 3.23px 0 #1b2238, -2.47px 2.47px 0 #1b2238, -3.23px 1.34px 0 #1b2238, -3.5px 0.0px 0 #1b2238, -3.23px -1.34px 0 #1b2238, -2.47px -2.47px 0 #1b2238, -1.34px -3.23px 0 #1b2238, -0.0px -3.5px 0 #1b2238, 1.34px -3.23px 0 #1b2238, 2.47px -2.47px 0 #1b2238, 3.23px -1.34px 0 #1b2238, 0 6px 0 #1b2238; transform: rotate(-4deg); }
     #loading .ld-logo .d { color: #f5c542; }
     #loading .ld-logo .w { color: #8fd8ff; }
     #loading .ld-dog { font-size: 44px; animation: ld-bob .5s ease-in-out infinite alternate; }
@@ -396,7 +398,7 @@
     #loading .ld-track { width: min(280px, 70vw); height: 18px; border: 3px solid #1b2238; border-radius: 12px; background: #fdf6e3;
       box-shadow: 0 3px 0 #1b2238; overflow: hidden; }
     #loading-bar { height: 100%; background: linear-gradient(#ffe08a, #f5c542); transform-origin: left; transform: scaleX(0); transition: transform .2s; }
-    #loading .ld-text { margin: 0; font-size: 17px; -webkit-text-stroke: 3px #1b2238; paint-order: stroke fill; }
+    #loading .ld-text { margin: 0; font-size: 17px; text-shadow: 1.8px 0.0px 0 #1b2238, 1.27px 1.27px 0 #1b2238, 0.0px 1.8px 0 #1b2238, -1.27px 1.27px 0 #1b2238, -1.8px 0.0px 0 #1b2238, -1.27px -1.27px 0 #1b2238, -0.0px -1.8px 0 #1b2238, 1.27px -1.27px 0 #1b2238; }
     @keyframes ld-bob { to { transform: translateY(-6px); } }
     @keyframes ld-swing { from { transform: rotate(-30deg); } to { transform: rotate(20deg); } }
     @media (prefers-reduced-motion: reduce) { #loading .ld-dog, #loading .ld-dirt { animation: none; } }

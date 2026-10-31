@@ -60,6 +60,9 @@ const colorOf = (color: number, y: number) =>
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 const fx = document.getElementById('fx') as HTMLCanvasElement;
 const fxCtx = fx.getContext('2d')!;
+// canvas text outlines: round joins, or sharp glyph corners (ㅅ ㅈ ㄱ, V, ×) grow miter spikes
+const resetFxText = () => { fxCtx.lineJoin = 'round'; fxCtx.miterLimit = 2; };
+resetFxText();
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
 // Flat storybook shading: no shadow maps (the hero gets a blob shadow), and Neutral tone mapping
@@ -1792,6 +1795,7 @@ function resize() {
   fx.width = Math.floor(W * dpr);
   fx.height = Math.floor(H * dpr);
   fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  resetFxText(); // resizing the canvas reset the context state
   buildVignettes();
   camera.aspect = W / H;
   camera.updateProjectionMatrix();
