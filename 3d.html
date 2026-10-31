@@ -388,6 +388,10 @@
       /* Text outlines are ring text-shadows, not -webkit-text-stroke: Safari/iOS ignore paint-order on
        HTML text, so the stroke was drawn over the glyphs (half inside) and Korean letters looked
        doubled and broken on iPhones and Mac Safari. */
+    #update { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 60;
+      padding: 10px 18px; border: 3px solid var(--ink); border-radius: 16px; background: var(--gold); color: var(--ink); font: inherit;
+      font-size: var(--fs-m); box-shadow: 0 3px 0 var(--ink); white-space: nowrap; }
+    #build-tag { position: fixed; right: 8px; bottom: calc(4px + env(safe-area-inset-bottom)); margin: 0; font-size: 11px; color: var(--cream); opacity: .45; }
     /* loading screen */
     #loading { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 18px; background: radial-gradient(ellipse at 50% 30%, #2f6fb5 0%, #163d7a 55%, #0b1a3d 100%); color: #fdf6e3;
@@ -455,6 +459,7 @@
       <p class="panel-head"><span>스테이지</span><span class="stars-total" id="stars-total"></span></p>
       <div id="stage-list"></div>
     </div>
+    <p id="build-tag" aria-hidden="true"></p>
     <p class="press"><span class="keys">↑↓ 스테이지 선택 · Space로 시작 · B 도감</span><span class="taps">탭해서 고르고, 한 번 더 탭하면 시작</span></p>
   </div>
   <div id="book" hidden>

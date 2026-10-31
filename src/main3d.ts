@@ -4,6 +4,7 @@
 // Input/HUD code is copied from main.ts on purpose (spike, not shared yet).
 import * as THREE from 'three';
 import './loading'; // first: hooks the loading manager before any texture starts loading
+import { startVersionCheck } from './version';
 import { addProps } from './props3d';
 import {
   Badge, BADGES, Cosmetic, COSMETICS, cosmeticForBadge, CosmeticSlot, dailyHistory, dailyOf, dailyRecord, dailyShareText, equippedCosmetics,
@@ -3533,3 +3534,4 @@ resize();
 window.addEventListener('resize', resize);
 window.visualViewport?.addEventListener('resize', resize);
 requestAnimationFrame(frame);
+startVersionCheck();
