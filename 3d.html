@@ -12,7 +12,7 @@
        digits + system Hangul: wider, other baseline) and on Safari stayed overlapping and spilling
        out of its pill. block: invisible for a moment rather than drawn in the wrong font. */
     @font-face { font-family: "Jua"; src: url("fonts/jua.woff2") format("woff2"); font-display: block; }
-    #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
+    #fx { pointer-events: none; } /* sized with #game from JS (style.css canvas rule) */
     /* Style A HUD: storybook font and the same navy ink as the board */
     body { font-family: "Jua", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
       word-break: keep-all; overflow-wrap: break-word; } /* Korean wraps at spaces, never mid-word (a too-long word still breaks) */

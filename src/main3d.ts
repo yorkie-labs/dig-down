@@ -108,7 +108,7 @@ const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 // Retina screens, where the game canvas already renders at 2×. k is capped so no side passes
 // 4096px and no texture passes ~4.2M px (16MB) — phone GPU memory — and stays 2 on 1× screens.
 // Soft layers (gradients, washes) pass superMax 2: extra pixels buy nothing there.
-const TEX_SUPER = (window.devicePixelRatio || 1) >= 1.5 ? 4 : 2;
+const TEX_SUPER = (window.devicePixelRatio || 1) < 1.5 ? 2 : matchMedia('(pointer: coarse)').matches ? 3 : 4; // phones: GPU memory
 function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, repeatY = 1, superMax = TEX_SUPER) {
   const c = document.createElement('canvas');
   const k = Math.max(1, Math.min(superMax, Math.floor(4096 / Math.max(w, h)), Math.floor(Math.sqrt(4.2e6 / (w * h)))));
@@ -1460,10 +1460,10 @@ let pixelStep = 3;
 const renderLabel = document.getElementById('render-label');
 let pixelMode = new URLSearchParams(location.search).get('pixel') === '1';
 function applyRenderScale() {
-  const h = window.innerHeight;
+  const h = H || window.innerHeight;
   const lines = PIXEL_STEPS[pixelStep];
   renderer.setPixelRatio(pixelMode ? lines / h : Math.min(2, window.devicePixelRatio || 1));
-  renderer.setSize(window.innerWidth, h, false);
+  renderer.setSize(W || window.innerWidth, h, false);
   canvas.style.imageRendering = pixelMode ? 'pixelated' : 'auto';
   if (renderLabel) renderLabel.textContent = `화면: ${pixelMode ? `픽셀 렌더링 (세로 ${lines}줄, [ ]로 조절)` : '일반 렌더링'} (P로 바꾸기)`;
 }
@@ -1735,6 +1735,7 @@ const DRY_KO = '캡슐 적은 층 · 공기를 아껴요';
 let levelWipe = 0; // seconds left of the level-transition aurora sweep
 let hitStop = 0; // seconds the simulation holds still after a big chain pop
 let W = 0, H = 0;
+let lastW = -1, lastH = -1, lastDpr = -1; // last applied viewport (resize skips repeats)
 
 const held = new Map<Dir, number>();
 let drillHeld = false;
@@ -1789,8 +1790,14 @@ function reset() {
 }
 
 function resize() {
-  W = window.innerWidth;
-  H = window.innerHeight;
+  // the visible viewport (iOS: excludes the browser toolbars); both canvases get exactly this CSS
+  // size so the WebGL frame, the fx overlay and the HTML HUD line up
+  const vv = window.visualViewport;
+  W = Math.round(vv?.width ?? window.innerWidth);
+  H = Math.round(vv?.height ?? window.innerHeight);
+  if (W === lastW && H === lastH && (window.devicePixelRatio || 1) === lastDpr) return; // iOS fires resize in bursts
+  lastW = W; lastH = H; lastDpr = window.devicePixelRatio || 1;
+  for (const c of [canvas, fx]) { c.style.width = `${W}px`; c.style.height = `${H}px`; }
   applyRenderScale();
   const dpr = window.devicePixelRatio || 1;
   fx.width = Math.floor(W * dpr);
@@ -3524,4 +3531,5 @@ function frame(now: number) {
 reset();
 resize();
 window.addEventListener('resize', resize);
+window.visualViewport?.addEventListener('resize', resize);
 requestAnimationFrame(frame);
