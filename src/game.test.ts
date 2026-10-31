@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  levelTempo, levelAirTempo, TEMPO_START, TEMPO_END, AIR_START, AIR_END,
   AIR_CAPSULE, AIR_CHAIN, AIR_DRAIN, AIR_RESPAWN_SUFFOCATE, AIR_MAX, AIR_XBLOCK, CAPSULE, cellAt, CLEAR, computeChunks, createGame,
   DEFAULT_STAGE, depthOfRow, drill, stageRows, DRILL_COOLDOWN, EXTEND_SCORES, Game, LEVEL_COLORS, levelOfDepth, makeCell, move,
   SCORE_CAPSULE, SCORE_DRILL, SCORE_LEVEL_CLEAR, SCORE_LIFE_BONUS, SCORE_POP, START_LIVES, tick,
@@ -93,8 +94,9 @@ describe('stages', () => {
     expect(cellAt(g, 0, 201)!.color).toBe(CLEAR); // last row of the last level
     g.level = 2;
     g.air = 100;
+    const tempo = levelAirTempo(g); // the in-level air tempo scales the drain
     update(g, 1);
-    expect(g.air).toBeCloseTo(91, 5);
+    expect(g.air).toBeCloseTo(100 - 9 * tempo, 5);
   });
 });
 
@@ -419,7 +421,8 @@ describe('drill', () => {
 describe('gravity', () => {
   it('wobbles an unsupported chunk before it falls', () => {
     const g = fromAscii(['a..', '...', 'bbM', 'ccc']);
-    run(g, WOBBLE_TIME[0] - 0.1);
+    const wobble = WOBBLE_TIME[0] / levelTempo(g); // wobble shortens as the level's tempo builds
+    run(g, wobble - 0.1);
     expect(ascii(g)[0]).toBe('a..');
     run(g, 0.3);
     expect(ascii(g)[0]).toBe('...');
@@ -490,7 +493,7 @@ describe('air', () => {
   it('drains over time and costs a life at zero', () => {
     const g = fromAscii(['M', 'a', 'b']);
     update(g, 1);
-    expect(g.air).toBeCloseTo(AIR_MAX - AIR_DRAIN[0], 5);
+    expect(g.air).toBeCloseTo(AIR_MAX - AIR_DRAIN[0] * levelAirTempo(g), 5);
     g.air = 0.01;
     update(g, 0.05);
     expect(g.lives).toBe(START_LIVES - 1);
@@ -1073,5 +1076,21 @@ describe('studio review: structured twists', () => {
     const plain: StageDef = { ...DEFAULT_STAGE, id: 'x0' };
     const clustered: StageDef = { ...plain, levels: plain.levels.map((l) => ({ ...l, xCluster: 0.3 })) };
     expect(groups(clustered)).toBeGreaterThan(groups(plain) * 2);
+  });
+});
+
+describe('tempo', () => {
+  it('builds within a level and resets at the next one (sawtooth)', () => {
+    const g = createGame(1, DEFAULT_STAGE);
+    g.mole.y = 2; g.level = 1;
+    expect(levelTempo(g)).toBeCloseTo(TEMPO_START, 2);
+    expect(levelAirTempo(g)).toBeCloseTo(AIR_START, 2); // easy breathing after the clear row
+    g.mole.y = 2 + 95;
+    expect(levelTempo(g)).toBeGreaterThan(1.25);
+    expect(levelTempo(g)).toBeLessThanOrEqual(TEMPO_END);
+    expect(levelAirTempo(g)).toBeGreaterThan(1.45); // the squeeze before the next clear row
+    expect(levelAirTempo(g)).toBeLessThanOrEqual(AIR_END);
+    g.mole.y = 2 + 102; g.level = 2; // just past the clear row
+    expect(levelAirTempo(g)).toBeLessThan(1);
   });
 });

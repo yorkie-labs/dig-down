@@ -130,7 +130,7 @@ type Pos = { x: number; y: number };
 export type GameEvent =
   | { type: 'drill'; cells: (Pos & { color: number })[] }
   // chain: the cascade step (sets air); step: chain + combo (pop pitch); points: see popScoreMul
-  | { type: 'pop'; cells: (Pos & { color: number })[]; chain: number; step: number; air: number; points: number }
+  | { type: 'pop'; cells: (Pos & { color: number })[]; chain: number; step: number; air: number; points: number; melt?: number } // melt: melt-chain root (0/absent = none)
   | { type: 'combo'; n: number }
   | { type: 'whiff'; dir: Dir } // a swing at nothing (empty, falling block or board edge)
   | { type: 'shield'; x: number; y: number } // a block shattered on the mole while invulnerable
@@ -267,6 +267,23 @@ export function levelIn(depth: number, levels: number): number {
 
 export const stageRows = (stage: StageDef) => SKY_ROWS + stage.levels.length * LEVEL_DEPTH;
 const levelAt = (g: Game) => g.levels[g.level - 1];
+// Tempo (playtest: "no squeeze; easy then hard, and again after each stage"): within each 100m
+// level blocks wobble shorter and fall faster (TEMPO 1 → 1.35) and air drains from easy to tight
+// (AIR 0.95 → 1.6, shape p^1.6); the aqua clear row resets both — a breather before the next
+// level's harder baseline. A sawtooth on a rising line. Our tuning; bot sim (greedy, 20 seeds):
+// arcade 30% / aurora 15% clears, as before the change; thaw 45% → 75%.
+export const TEMPO_START = 1, TEMPO_END = 1.35, TEMPO_CURVE = 1.6, AIR_START = 0.95, AIR_END = 1.6;
+export function levelProgress(g: Game): number {
+  const d = depthOfRow(g.mole.y) - (g.level - 1) * LEVEL_DEPTH;
+  return Math.max(0, Math.min(1, d / LEVEL_DEPTH));
+}
+const shape = (g: Game) => levelProgress(g) ** TEMPO_CURVE;
+/** fall/wobble speed factor: blocks get quicker through the level */
+export const levelTempo = (g: Game) => TEMPO_START + (TEMPO_END - TEMPO_START) * shape(g);
+/** air drain factor: easy breathing after a clear row, a squeeze near the next one. Kept separate
+ *  from the fall tempo: slower falls (< 1) made the bot wait on wobbles and suffocate (arcade bot
+ *  clears 30% → 15%), so falls only speed up while the drain does the easy-then-hard swing. */
+export const levelAirTempo = (g: Game) => AIR_START + (AIR_END - AIR_START) * shape(g);
 
 export function depthOfRow(y: number): number {
   return y - (SKY_ROWS - 1);
@@ -820,7 +837,7 @@ export function update(g: Game, dt: number): void {
   if (g.state !== 'playing') return;
   g.time += dt;
   g.mole.invuln = Math.max(0, g.mole.invuln - dt);
-  if (g.stage.air.kind === 'time') drainAir(g, levelAt(g).airDrain * dt);
+  if (g.stage.air.kind === 'time') drainAir(g, levelAt(g).airDrain * levelAirTempo(g) * dt);
   g.acc += dt;
   while (g.acc >= TICK && g.state === 'playing') {
     g.acc -= TICK;
@@ -883,11 +900,13 @@ export function tick(g: Game): void {
   extendEndless(g);
   meltThaw(g);
   const { labels, chunks } = computeChunks(g);
-  const wobbleTime = levelAt(g).wobble;
+  const tempo = levelTempo(g);
+  const wobbleTime = levelAt(g).wobble / tempo;
+  const fallSpeed = levelAt(g).fallSpeed * tempo;
   // Falling blocks advance one row per fall step; everything else runs every tick.
   g.fallAcc += TICK;
-  const fallStep = g.fallAcc >= 1 / levelAt(g).fallSpeed;
-  if (fallStep) g.fallAcc -= 1 / levelAt(g).fallSpeed;
+  const fallStep = g.fallAcc >= 1 / fallSpeed;
+  if (fallStep) g.fallAcc -= 1 / fallSpeed;
   const moving: number[][] = [];
   const pops: [number[], number, number, boolean][] = []; // members, chain, melt root (-1 = new), drillMade
   g.comboTimer = Math.max(0, g.comboTimer - TICK);
@@ -1002,7 +1021,7 @@ function popChunk(g: Game, members: number[], chain: number, meltRoot = 0, drill
   g.air = Math.min(airCap(g), g.air + air);
   const xPop = g.cells[members[0]]!.color === XBLOCK;
   const cells = removeCells(g, members);
-  g.events.push({ type: 'pop', cells, chain, step, air, points });
+  g.events.push({ type: 'pop', cells, chain, step, air, points, melt: meltRoot });
   if (xPop && g.stage.friends) {
     // deterministic pick among the popped cells, so fixed courses replay the same
     const at = members[(members.length * 7 + g.stats.friends * 3) % members.length];

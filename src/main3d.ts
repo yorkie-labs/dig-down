@@ -13,13 +13,14 @@ import {
 } from './progress';
 import { dailyKey, dailyStage, isDailyId, isDryLevel, ruleOf, STAGES, StageInfo, stageById, stageDepth } from './stages';
 import {
-  AIR_CAPSULE, AIR_MAX, AIR_WARNING, CAPSULE, Cell, cellAt, CLEAR, CLOCK, ensureRows, FRIEND, levelIn, THAW, XBLOCK_HP, createGame, depthOf, depthOfRow, Dir,
+  AIR_CAPSULE, AIR_MAX, AIR_WARNING, CAPSULE, levelTempo, levelAirTempo, levelProgress, AIR_START, AIR_END, Cell, cellAt, CLEAR, CLOCK, ensureRows, FRIEND, levelIn, THAW, XBLOCK_HP, createGame, depthOf, depthOfRow, Dir,
   COMBO_WINDOW, drill, DrillResult, Game, GameEvent, GOAL_DEPTH, keyPieceBelow, ROWS, levelOfDepth, move, SKY_ROWS, update, XBLOCK,
 } from './game';
 import {
   initSfx, isMuted, sfxBreak, sfxCapsule, sfxClearRow, sfxClock, sfxCombo, sfxCrush, sfxDangerTick, sfxFriend, sfxHammer, sfxHeartbeat,
   sfxLand, sfxLevelUp, sfxLose, sfxPop, sfxShield, sfxStep, sfxSuffocate, sfxWhiff, sfxWin, sfxWobbleTick, sfxXBreak,
   sfxXChip, toggleMuted, unlockSfx,
+  musicStop, musicTick,
 } from './sfx';
 
 // Storybook palettes per level: four saturated gouache hues with separated values, so chunks
@@ -1681,6 +1682,11 @@ let floaters: Floater[] = [];
 // shield ring: an expanding white circle where the respawn shield shattered a block
 interface Ring { x: number; y: number; life: number }
 let rings: Ring[] = [];
+// Impact stars (playtest: breaking lacked punch): at the struck face, a white flash card and a
+// comic burst of rays, ~0.12s. Drawn on the fx canvas, pooled.
+interface Impact { x: number; y: number; life: number; size: number; rot: number }
+const IMPACT_LIFE = 0.13;
+let impacts: Impact[] = [];
 const RING_LIFE = 0.35;
 const COMBO_COLOR = '#ff9ad5'; // pink: apart from chain gold and air blue
 
@@ -1734,6 +1740,7 @@ function levelBanner(text: string, level: number, life: number) {
 }
 const DRY_KO = '캡슐 적은 층 · 공기를 아껴요';
 let levelWipe = 0; // seconds left of the level-transition aurora sweep
+let paceCueLevel = 0; // level whose speed-up cue has played
 let hitStop = 0; // seconds the simulation holds still after a big chain pop
 let W = 0, H = 0;
 let lastW = -1, lastH = -1, lastDpr = -1; // last applied viewport (resize skips repeats)
@@ -1773,6 +1780,7 @@ function reset() {
   particles = [];
   floaters = [];
   rings = [];
+  impacts = [];
   flashes = [];
   ghosts = [];
   puffs = [];
@@ -1784,7 +1792,7 @@ function reset() {
   stepX = game.mole.x; // no step sound for the jump back to the start column (bug review 8)
   clearToasts();
   if (started) stageBlurb(); // a restart shows the stage's rule again (bug review 6)
-  hitStop = heroFreeze = kickX = kickY = shake = beat = 0;
+  hitStop = heroFreeze = kickX = kickY = shake = beat = paceCueLevel = 0;
   metricT = dryWarned = 0;
   overlay.hidden = true;
   setPaused(false);
@@ -2490,14 +2498,23 @@ function handleEvent(e: GameEvent) {
       addGhosts(e.cells);
       // The 1-block break is the most frequent action and read weakest (review item 4): 4 chips a
       // cell for small breaks; big chunks keep 1 so the shatter doesn't bury the hero.
-      const chips = e.cells.length <= 4 ? 4 : 1;
-      for (const c of e.cells) burst(c.x, c.y, colorOf(c.color, c.y), chips);
+      const chips = e.cells.length <= 4 ? 6 : 2;
+      for (const c of e.cells) burst(c.x, c.y, colorOf(c.color, c.y), chips, 1.4);
       // directional kick toward the struck face, and the hero alone holds the impact pose
       const f = game.mole.facing;
       kickX = f === 'left' ? -KICK : f === 'right' ? KICK : 0;
       kickY = f === 'up' ? KICK : f === 'down' ? -KICK : 0;
       heroFreeze = HERO_FREEZE;
-      sfxBreak(e.cells.length);
+      // Punch (playtest): every break now gets a world hitstop, a short shake that grows with the
+      // chunk, and an impact star where the hammer met the block. Our tuning.
+      const n = e.cells.length;
+      hitStop = Math.max(hitStop, n <= 2 ? 0.03 : Math.min(0.08, 0.04 + 0.006 * n)); // short: digging pace is the game
+      shake = Math.max(shake, Math.min(0.16, 0.07 + 0.012 * n));
+      const hx = game.mole.x + (f === 'left' ? -0.5 : f === 'right' ? 0.5 : 0);
+      const hy = game.mole.y + (f === 'up' ? -0.5 : f === 'down' ? 0.5 : 0);
+      impacts.push({ x: hx, y: hy, life: IMPACT_LIFE, size: Math.min(1.6, 1 + 0.08 * n), rot: Math.random() * Math.PI });
+      sfxBreak(n);
+      vibrate(12);
       break;
     }
     case 'whiff': // a swing at nothing still swings, with a dull swish (no kick, no freeze)
@@ -2545,8 +2562,12 @@ function handleEvent(e: GameEvent) {
       const sx = e.x + (f === 'left' ? 0.4 : f === 'right' ? -0.4 : 0);
       const sy = e.y + (f === 'up' ? 0.4 : f === 'down' ? -0.4 : 0);
       if (flashes.length < FLASH_MAX) flashes.push({ x: sx, y: sy, life: FLASH_LIFE * 0.7, color: '#ffd86b', size: 0.45 });
-      burst(e.x, e.y, XBLOCK_COLOR, 3);
-      shake = Math.max(shake, 0.05);
+      burst(e.x, e.y, XBLOCK_COLOR, 4, 1.2);
+      shake = Math.max(shake, 0.07);
+      hitStop = Math.max(hitStop, 0.03);
+      // a small impact star too, growing as the block nears breaking (5 hits)
+      impacts.push({ x: sx, y: sy, life: IMPACT_LIFE, size: 0.7 + 0.12 * (XBLOCK_HP - e.hp), rot: Math.random() * Math.PI });
+      vibrate(8);
       sfxXChip(e.hp);
       break;
     }
@@ -2775,7 +2796,7 @@ const wasFallingCells = new WeakSet<Cell>();
 function smoothRow(cell: Cell, y: number, dt: number) {
   let v = visualY.get(cell);
   if (v === undefined || v > y || y - v > 3) v = y; // new, popped back up, or teleported: snap
-  else if (v < y) v = Math.min(y, v + game.levels[game.level - 1].fallSpeed * 1.15 * dt);
+  else if (v < y) v = Math.min(y, v + game.levels[game.level - 1].fallSpeed * levelTempo(game) * 1.15 * dt);
   // touchdown = the logic's falling flag going true → false (the glide may finish either side of it)
   if (cell.falling) wasFallingCells.add(cell);
   else if (wasFallingCells.delete(cell)) landT.set(cell, LAND_SQUASH);
@@ -2829,7 +2850,7 @@ const DANGER_TINT = new THREE.Color('#ff3b4e');
 function syncBlocks(t: number, dt: number) {
   const centerRow = Math.round(-camY);
   let nb = 0, nx = 0, nc = 0, ns = 0, nf = 0, nk = 0;
-  const wobbleTime = game.levels[game.level - 1].wobble; // the rules use the mole's level too
+  const wobbleTime = game.levels[game.level - 1].wobble / levelTempo(game); // as the rules: level + tempo
   const mx = game.mole.x, my = game.mole.y;
   wobbleNear = -1;
   for (let y = Math.max(0, centerRow - WINDOW_ROWS); y < Math.min(game.rows, centerRow + WINDOW_ROWS); y++) {
@@ -3230,6 +3251,36 @@ function drawFx(t: number, dt: number) {
     fxCtx.fillText(f.text, px, py);
   }
   fxCtx.globalAlpha = 1;
+  // impact stars: white flash + comic rays, popping out fast
+  for (let i = impacts.length - 1; i >= 0; i--) {
+    const im = impacts[i];
+    im.life -= dt;
+    if (im.life <= 0) { impacts.splice(i, 1); continue; }
+    const k = 1 - im.life / IMPACT_LIFE; // 0 → 1
+    project.set(wx(im.x), wy(im.y), 0.7).project(camera);
+    const px = (project.x * 0.5 + 0.5) * W, py = (-project.y * 0.5 + 0.5) * H;
+    const cell = (H / VIEW_ROWS) * im.size; // ~one cell on screen
+    fxCtx.save();
+    fxCtx.translate(px, py);
+    fxCtx.rotate(im.rot);
+    fxCtx.globalAlpha = 1 - k * k;
+    // the star: 8 spikes, alternating long/short, ink rim under a white fill
+    const outer = cell * (0.35 + 0.45 * Math.min(1, k * 3)), inner = outer * 0.42;
+    fxCtx.beginPath();
+    for (let j = 0; j < 16; j++) {
+      const r = j % 2 ? inner : outer * (j % 4 ? 0.75 : 1);
+      const a = (j / 16) * Math.PI * 2;
+      fxCtx[j ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r);
+    }
+    fxCtx.closePath();
+    fxCtx.lineWidth = 4;
+    fxCtx.strokeStyle = INK;
+    fxCtx.stroke();
+    fxCtx.fillStyle = k < 0.35 ? '#ffffff' : '#fff3b0';
+    fxCtx.fill();
+    fxCtx.restore();
+  }
+  fxCtx.globalAlpha = 1;
   // shield rings: a thin white circle that grows and fades
   for (let i = rings.length - 1; i >= 0; i--) {
     const r = rings[i];
@@ -3479,6 +3530,18 @@ function frame(now: number) {
     if (camera.aspect < 0.8) fitCliffs();
   }
   props?.update(dt, wy(view.y)); // penguin life (wall time, also on the title) + distance culling
+  // Music follows the pace (playtest: tension): relaxed after a clear row, pressing near the next.
+  if (started && game.state === 'playing' && !paused) {
+    const pace = (levelAirTempo(game) - AIR_START) / (AIR_END - AIR_START); // music follows the squeeze
+    const urgency = game.stage.air.kind === 'time' && game.air < 40 ? (40 - Math.max(0, game.air)) / 40 : 0;
+    musicTick(pace, urgency);
+    // one cue per level when the squeeze starts, so the speed-up reads as a beat, not drift
+    if (levelProgress(game) > 0.6 && paceCueLevel !== game.level) {
+      paceCueLevel = game.level;
+      floaters.push({ x: game.mole.x, y: game.mole.y - 1.4, text: '⚡ 빨라진다!', life: 1.1, color: '#ffd86b' });
+      shake = Math.max(shake, 0.08);
+    }
+  } else musicStop();
   prev = now;
   const t = now / 1000;
 

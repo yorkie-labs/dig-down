@@ -324,6 +324,10 @@ export function sfxBreak(size = 1): void {
   const f = (1046 / (1 + 0.07 * (n - 1))) * jit(); // C6 down toward ~G5 for big clumps (our tuning)
   bar(f, 0.16, 0.22 + 0.02 * n);
   noise(0.04, { freq: 4500, q: 0.9, gain: 0.12 + 0.01 * n, filter: 'highpass' });
+  // the crunch under the ting (playtest: breaking lacked punch): an ice-crack sweep plus a body
+  // thump that phone speakers still carry (fundamental above 150Hz)
+  noise(0.08, { filter: 'lowpass', freq: 3200, to: 700, gain: 0.22 + 0.015 * n });
+  tone(210 * jit(), 0.09, { type: 'triangle', to: 120, gain: 0.32 });
 }
 
 /** X block chipped; hpLeft = hits remaining. Pitch climbs as it nears breaking. */
@@ -475,4 +479,40 @@ export function sfxLose(): void {
 export function sfxStep(): void {
   if (!gate('step', 70)) return;
   noise(0.025, { filter: 'lowpass', freq: 900 * jit(), gain: 0.05 });
+}
+
+// ---- music: a tiny procedural loop that tightens with the game's pace ----
+// Playtest: "no squeeze". The loop's tempo follows the in-level tempo (relaxed at a level's start,
+// pressing near its clear row) and layers come in with intensity: bass always, then a kick, then
+// hats and an arpeggio; low air adds urgency. Lowest priority: any sound effect steals its voices.
+// Scheduled ahead on the audio clock from musicTick() (called every frame), so frame hitches
+// don't wobble the beat. Our tuning throughout.
+const ARP = [0, 2, 4, 2, 5, 4, 2, 4, 0, 2, 4, 7, 5, 4, 2, 1]; // pentatonic degrees, one bar of 16ths
+const BASS = [0, 0, -2, -2, -1, -1, -3, -2]; // root walk per half bar (degrees below C5)
+let musicOn = false, nextAt = 0, step = 0;
+export function musicStop(): void { musicOn = false; }
+/** pace: 0 (relaxed) … 1 (pressing); urgency: 0 … 1 (low air) */
+export function musicTick(pace: number, urgency: number): void {
+  const t0 = now();
+  if (t0 === null) { musicOn = false; return; }
+  if (!musicOn) { musicOn = true; nextAt = t0 + 0.05; step = 0; }
+  const bpm = 96 + 64 * pace + 12 * urgency;
+  const s16 = 60 / bpm / 4;
+  const intensity = Math.min(1, 0.25 + 0.75 * pace + 0.4 * urgency);
+  while (nextAt < t0 + 0.15) {
+    const d = Math.max(0, nextAt - t0);
+    const i = step % 16;
+    withPrio(1, () => {
+      if (i % 8 === 0) { // bass, twice a bar, an octave below the melody (triangle: phones carry it)
+        const f = pentaFreq(BASS[(step >> 3) % BASS.length]) / 2;
+        tone(f, s16 * 7, { type: 'triangle', gain: 0.07, delay: d, lowpass: 900 });
+      }
+      if (intensity > 0.35 && i % 4 === 0) tone(170, 0.07, { type: 'triangle', to: 90, gain: 0.09 * intensity, delay: d }); // kick
+      if (intensity > 0.55 && i % 4 === 2) noise(0.03, { filter: 'highpass', freq: 7000, gain: 0.05 * intensity, delay: d }); // hat
+      if (intensity > 0.7 && i % 2 === 0) tone(pentaFreq(ARP[i]), s16 * 1.6, { type: 'sine', gain: 0.035 * intensity, delay: d }); // arp
+      if (urgency > 0.5 && i === 8) tone(pentaFreq(9), 0.12, { type: 'square', gain: 0.025, delay: d, lowpass: 2400 }); // alarm blip
+    });
+    nextAt += s16;
+    step++;
+  }
 }

@@ -16,3 +16,4 @@
 | 2026-10-28 | Studio review 2 (2차 평가·3차 로드맵) | [todo](20261028-studio-review2-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
 | 2026-10-30 | UI review (디자이너 관점) | [todo](20261030-ui-review-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
 | 2026-10-31 | Deploy (GitHub Pages) | [todo](20261031-deploy-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
+| 2026-10-31 | Playtest feedback (긴장감·속도 리듬·타격감) | [todo](20261031-playtest-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |

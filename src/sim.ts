@@ -390,7 +390,7 @@ class MeltTracker {
       if (r !== undefined) this.pre.set(i, r);
     }
   }
-  pop(g: Game, e: { cells: { x: number; y: number }[]; chain: number }) {
+  pop(g: Game, e: { cells: { x: number; y: number }[]; chain: number; melt?: number }) {
     if (!this.pre.size) return;
     let root: number | undefined;
     let fresh = false;
@@ -399,6 +399,10 @@ class MeltTracker {
       if (r === -1) fresh = true;
       else if (r !== undefined) root ??= r;
     }
+    // A melt that happens inside the same tick as the pop (thaw tags, the stack lands and pops) is
+    // invisible to the pre-tick snapshot; the event's own melt root catches it (more common since
+    // the in-level tempo shortens wobbles and falls).
+    if (!fresh && e.melt && e.melt > this.roots) fresh = true;
     if (fresh) root = this.roots++; // what the game counts as a melt chain
     if (root === undefined) return;
     if (e.chain >= 2) this.reached.add(root);
