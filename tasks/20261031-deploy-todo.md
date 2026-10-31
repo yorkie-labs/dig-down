@@ -16,6 +16,9 @@
 - [x] 초기 로딩 화면: HTML/CSS라 JS 번들이 오기 전부터 표시(로고, 강아지, 진행 바, '얼음 파는 중… n%'). three의 DefaultLoadingManager(모든 텍스처와 스프라이트)와 웹폰트 완료 후 페이드아웃, 15초 안전 타임아웃. CDN 소품은 별도 매니저라 로딩을 붙잡지 않음. dev `?holdloading`으로 화면 확인. 배포 확인(5aba627)
 
 ## 다음
-- [ ] PWA(manifest, 아이콘, 오프라인 캐시)로 홈 화면에 설치
+- [x] PWA: `public/manifest.webmanifest`(전체 화면, 세로, 남색 테마), 아이콘(강아지 + 밤하늘 + 눈밭: 192·512·maskable·apple-touch·favicon, Blender로 렌더링), iOS 메타 태그
+  - 서비스 워커는 빌드 때 `src/sw-template.js`에 빌드 id와 프리캐시 목록(실제로 쓴 파일 39개, 약 9MB)을 넣어 `dist/sw.js` 생성
+  - 캐시 전략: 페이지는 네트워크 우선, version.json은 항상 네트워크, Polyfork CDN은 stale-while-revalidate, 나머지는 캐시 우선. 배포마다 캐시 이름이 바뀌고 옛 캐시는 삭제
+  - 운영 빌드에서만 등록. 로컬 운영 빌드로 확인: 등록·프리캐시 39개, 서버를 끈 상태에서 타이틀·소품까지 정상
 - [ ] Actions 경고: Node 20 액션 지원 종료 예정 → checkout/setup-node/upload-pages-artifact/deploy-pages 새 메이저 버전이 나오면 올리기
 - [ ] 번들 737KB(gzip 200KB): three.js 코드 분할 검토

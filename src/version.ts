@@ -26,8 +26,14 @@ function offer() {
   document.body.appendChild(b);
 }
 export function startVersionCheck() {
+  // PWA: offline cache + installability. Production only: in dev the worker would cache the
+  // Vite dev modules and serve stale code.
+  if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* not fatal: the game still runs online */ });
+  }
   check();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+  navigator.serviceWorker?.addEventListener('controllerchange', () => { if (navigator.serviceWorker.controller) check(); });
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = `v ${BUILD}`;
 }

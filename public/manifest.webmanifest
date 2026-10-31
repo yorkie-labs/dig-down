@@ -1,0 +1,19 @@
+{
+  "name": "Dig Down — 강아지의 굴착 모험",
+  "short_name": "Dig Down",
+  "description": "얼음 아래로, 강아지의 굴착 모험. Mr. Driller 스타일 퍼즐 액션.",
+  "lang": "ko",
+  "start_url": "./3d.html?source=pwa",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#163d7a",
+  "theme_color": "#163d7a",
+  "categories": ["games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
