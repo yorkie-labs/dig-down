@@ -2,6 +2,8 @@
 // (tasks/20261028-style-a-todo.md): flat gouache blocks with one constant ink line around each
 // chunk, a painted ice-cave backdrop with parallax cliffs and icicles, and a flat 2D hero.
 // Input/HUD code is copied from main.ts on purpose (spike, not shared yet).
+import './style.css'; // legacy base + design tokens
+import './game3d.css'; // the 3D page's styles: after style.css, so they override it
 import * as THREE from 'three';
 import './loading'; // first: hooks the loading manager before any texture starts loading
 import { startVersionCheck } from './version';

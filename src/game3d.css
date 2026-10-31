@@ -1,0 +1,403 @@
+/* Style A page styles (3d.html). Imported by main3d.ts after style.css so they always win. */
+/* Jua is self-hosted (public/fonts, SIL OFL, subset to Latin + Hangul). Google Fonts split it
+       into ~100 Korean slices loaded on demand, so HUD text first drew in the fallback (Comic Sans
+       digits + system Hangul: wider, other baseline) and on Safari stayed overlapping and spilling
+       out of its pill. block: invisible for a moment rather than drawn in the wrong font. */
+    @font-face { font-family: "Jua"; src: url("/fonts/jua.woff2") format("woff2"); font-display: block; }
+    #fx { pointer-events: none; } /* sized with #game from JS (style.css canvas rule) */
+    /* Style A HUD: storybook font and the same navy ink as the board */
+    body { font-family: "Jua", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+      word-break: keep-all; overflow-wrap: break-word; } /* Korean wraps at spaces, never mid-word (a too-long word still breaks) */
+    /* HUD as one aligned top bar (UI review 4): hearts left, depth big in the middle, score right,
+       the pause button docked at its end; the air row and the medal chip sit under it. The three
+       separate pills, the medal line and the mute button used to float each on its own. */
+    #hud { top: calc(10px + env(safe-area-inset-top)); text-shadow: none; }
+    .hud-top { display: flex; align-items: stretch; gap: 8px; }
+    .hud-row { flex: 1; min-width: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
+      padding: 2px 14px; border: 3px solid var(--ink); border-radius: 16px; background: var(--cream); color: var(--ink);
+      box-shadow: 0 3px 0 var(--ink); font-weight: normal; }
+    #lives { justify-self: start; color: var(--pink); letter-spacing: 2px; font-size: var(--fs-l); white-space: nowrap; }
+    #score { justify-self: end; color: var(--gold-ink); font-size: var(--fs-l); white-space: nowrap; }
+    #depth { justify-self: center; display: flex; align-items: baseline; gap: 4px; min-width: 0; white-space: nowrap; line-height: 1.1; }
+    #depth b { font-size: var(--fs-xl); font-weight: normal; }
+    #depth .u { font-size: var(--fs-m); } /* a negative margin overlapped the digits in other fonts */
+    #depth .lv { padding: 0 6px; border-radius: 8px; background: var(--ink); color: var(--cream); font-size: var(--fs-xs); }
+    /* air (UI review 3): the label and number sit outside the bar in ink on cream, the dark bar
+       only shows the level; under 30% the whole row turns red and pulses */
+    #air-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    #air-label { flex: none; display: flex; align-items: center; gap: 4px; padding: 1px 10px 1px 6px; border: 3px solid var(--ink);
+      border-radius: 14px; background: var(--cream); color: var(--ink); box-shadow: 0 3px 0 var(--ink); font-size: var(--fs-m); white-space: nowrap; }
+    #air-icon { font-size: var(--fs-m); line-height: 1; }
+    /* style.css centres it inside the bar (2D page); here it is plain text in the label. min-width:
+       the number changing width must not jiggle the bar */
+    #air-text { position: static; display: inline-block; min-width: 4.2em; font-size: inherit; font-weight: normal; }
+    #air { flex: 1; min-width: 0; height: 26px; margin: 0; border: 3px solid var(--ink); border-radius: 14px; background: #23314f; box-shadow: 0 3px 0 var(--ink); }
+    #air-fill { background: linear-gradient(#9fe8ff, #4fc0f0); }
+    #air-row.low #air-label { background: var(--danger-soft); color: var(--danger-ink); }
+    #air-row.low #air-fill { background: linear-gradient(#ff8a98, var(--danger)); }
+    /* the long bar swells in height only (a uniform scale shoved its ends 20px out on desktop) */
+    #air-row.low #air { animation: airPulse .8s ease-in-out infinite; }
+    #air-row.low #air-label { animation: airPulse .8s ease-in-out infinite; --pulse: scale(1.07); }
+    @keyframes airPulse { 50% { transform: var(--pulse, scaleY(1.2)); box-shadow: 0 3px 0 var(--ink), 0 0 0 4px rgb(var(--danger-rgb) / 0.6); } }
+    @media (prefers-reduced-motion: reduce) { #air-row.low #air, #air-row.low #air-label { animation: none; } }
+    /* the medal this run chases (item 13): a small chip under the air bar, green once its number holds */
+    #medal-line { display: table; margin: 8px 0 0; padding: 1px 9px; border: 2px solid var(--ink); border-radius: 10px;
+      background: rgb(var(--cream-rgb) / 0.92); color: var(--ink); font-size: var(--fs-s); }
+    #medal-line[hidden] { display: none; }
+    #medal-line.met { background: var(--mint); }
+    #medal-line small { margin-left: 6px; font-size: var(--fs-xs); opacity: .75; }
+    /* narrow phones: the bar must hold 5 hearts, 4-digit depth and a 6-digit score in 358px */
+    @media (max-width: 420px) {
+      .hud-row { padding: 1px 10px; gap: 4px; }
+      #lives, #score { font-size: var(--fs-m); }
+      #lives { letter-spacing: 0; }
+      #depth b { font-size: var(--fs-xl); }
+      #air-label { font-size: var(--fs-s); }
+      #air { height: 22px; }
+    }
+    @media (max-width: 380px) {
+      #lives, #score { font-size: var(--fs-s); }
+      #depth { gap: 4px; }
+      #depth b { font-size: var(--fs-l); }
+      #depth .lv { padding: 0 4px; font-size: var(--fs-xs); }
+    }
+    @media (max-height: 520px) {
+      #hud { top: calc(6px + env(safe-area-inset-top)); }
+      .hud-row { padding: 0 12px; }
+      #depth b { font-size: var(--fs-l); }
+      #air-row { margin-top: 6px; }
+      #air { height: 20px; }
+      #medal-line { margin-top: 5px; }
+    }
+    body.on-title #hud { opacity: 0; }
+    #hud { transition: opacity .4s; }
+    #overlay-title, #restart { font-family: inherit; }
+    /* results card in the same storybook language as the HUD */
+    #overlay { background: var(--scrim); }
+    /* a real card (it was a fixed-height ::before): badge and next-medal rows grow it, and it scrolls on short screens */
+    #overlay .card { display: flex; flex-direction: column; align-items: center; width: min(400px, calc(100vw - 32px));
+      max-height: calc(100vh - 40px); overflow-y: auto; padding: 20px 18px; border-radius: 22px;
+      background: var(--cream); border: 4px solid var(--ink); box-shadow: 0 6px 0 var(--ink); }
+    /* Hierarchy (UI review 1): big stars and numbers, one line of why, the next goal, then the
+       small print. The old 9-row table read as one undifferentiated block. */
+    #overlay-title { color: var(--ink); text-shadow: none; font-size: var(--fs-xl); margin: 0; line-height: 1.1; }
+    #res-stage { margin: 2px 0 0; color: var(--ink); font-size: var(--fs-s); opacity: .7; }
+    #res-stars { margin: 4px 0 0; font-size: 52px; line-height: 1; letter-spacing: 4px; color: var(--gold);
+      text-shadow: 1.5px 0.0px 0 var(--ink), 1.06px 1.06px 0 var(--ink), 0.0px 1.5px 0 var(--ink), -1.06px 1.06px 0 var(--ink), -1.5px 0.0px 0 var(--ink), -1.06px -1.06px 0 var(--ink), -0.0px -1.5px 0 var(--ink), 1.06px -1.06px 0 var(--ink), 0 3px 0 var(--ink); }
+    #res-stars .dim { color: #e7dcc0; }
+    #res-stars .new, #res-hero .new { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 1px 7px; border-radius: 8px;
+      background: var(--pink); color: var(--white); font-size: var(--fs-xs); letter-spacing: 0; text-shadow: none; }
+    #res-hero { display: flex; gap: 10px; width: 100%; margin: 12px 0 0; }
+    #res-hero div { flex: 1; min-width: 0; padding: 6px 4px; border: 3px solid var(--ink); border-radius: 14px; background: var(--white); color: var(--ink); }
+    #res-hero small { display: block; font-size: var(--fs-xs); opacity: .7; }
+    #res-hero b { display: block; font-size: var(--fs-xl); font-weight: normal; line-height: 1.15; overflow-wrap: anywhere; }
+    #res-hero b span.of { font-size: var(--fs-s); opacity: .6; }
+    #res-cause, #res-goal { width: 100%; margin: 10px 0 0; padding: 6px 10px; border-radius: 12px; color: var(--ink); font-size: var(--fs-s); line-height: 1.35; text-wrap: balance; }
+    #res-cause { background: #ffe0e6; }
+    #res-goal { border: 2px dashed var(--ink); }
+    #res-cause[hidden], #res-goal[hidden] { display: none; }
+    #res-news { width: 100%; margin: 8px 0 0; padding: 0; list-style: none; color: var(--pink); font-size: var(--fs-s); }
+    #res-news:empty { display: none; }
+    #res-news li { margin: 3px 0 0; overflow-wrap: anywhere; }
+    #overlay-stats { color: var(--ink); grid-template-columns: auto minmax(0, 1fr); font-size: var(--fs-xs); gap: 2px 10px; margin: 10px 0 12px; opacity: .8; }
+    #overlay-stats:empty { display: none; }
+    #overlay-stats dd { overflow-wrap: anywhere; font-weight: normal; }
+    #overlay-stats dt { opacity: 0.7; }
+    #overlay-stats .best { color: var(--pink); }
+    /* one gold primary per card (UI review 2): retry after a loss, the next stage after a clear */
+    #res-actions { display: flex; flex-direction: column; align-items: center; width: 100%; }
+    #res-actions .primary { max-width: 100%; font-size: var(--fs-l); padding: 10px 20px; text-wrap: balance; background: var(--gold); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
+    #restart { font-size: var(--fs-m); padding: 8px 18px; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink); background: var(--cream); color: var(--ink); margin: 0 0 10px; }
+    /* key hints mean nothing to a thumb */
+    @media (pointer: coarse) { #overlay .key { display: none; } }
+    /* short landscape: the tall hierarchy pushed the buttons a scroll away, so shrink the hero
+       and line the buttons up in a row */
+    @media (max-height: 520px) {
+      #overlay .card { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 16px); padding: 10px 16px; }
+      #overlay-title { font-size: var(--fs-l); }
+      #res-stage { font-size: var(--fs-xs); }
+      #res-stars { font-size: 28px; text-shadow: 1.0px 0.0px 0 var(--ink), 0.71px 0.71px 0 var(--ink), 0.0px 1.0px 0 var(--ink), -0.71px 0.71px 0 var(--ink), -1.0px 0.0px 0 var(--ink), -0.71px -0.71px 0 var(--ink), -0.0px -1.0px 0 var(--ink), 0.71px -0.71px 0 var(--ink), 0 2px 0 var(--ink); }
+      #res-hero { margin-top: 6px; }
+      #res-hero div { display: flex; align-items: baseline; justify-content: center; gap: 8px; padding: 2px 4px; }
+      #res-hero b { font-size: var(--fs-l); }
+      #res-cause, #res-goal { margin-top: 6px; padding: 3px 10px; font-size: var(--fs-s); }
+      #overlay-stats { margin: 6px 0 8px; }
+      #res-actions { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+      #res-actions button { margin: 0; }
+      #res-actions .primary { font-size: var(--fs-m); padding: 8px 18px; }
+    }
+    #pad button { border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); background: rgb(var(--cream-rgb) / 0.85); color: var(--ink); }
+    /* Floating joystick (default touch control; ?pad=buttons brings the d-pad back). The zone is the
+       lower-left of the screen; the stick appears where the thumb lands and rests faintly at home. */
+    #stick-zone { position: fixed; left: 0; bottom: 0; width: 58vw; height: 46vh; touch-action: none; }
+    #stick-base { position: absolute; width: 112px; height: 112px; margin: -56px 0 0 -56px; border-radius: 50%;
+      border: 3px solid rgb(var(--ink-rgb) / 0.55); background: rgb(var(--cream-rgb) / 0.22); opacity: .55; transition: opacity .15s; pointer-events: none; }
+    #stick-base.on { opacity: 1; transition: none; }
+    #stick-knob { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%;
+      border: 3px solid var(--ink); background: rgb(var(--cream-rgb) / 0.72); box-shadow: 0 3px 0 var(--ink); }
+    body.on-title #stick-zone { display: none; } /* the title list needs those taps */
+    body:not(.pad-buttons) #pad .dpad { display: none; }
+    body.pad-buttons #stick-zone { display: none; }
+    /* Hammer button: the joystick's twin (translucent ring + inked disc), so the two thumbs read as
+       one control set and the board shows through. Its centre mirrors the stick's resting spot
+       (86px in, 100px up), where a right thumb lands without reaching. The ring is the hit area,
+       larger than the visible disc. Pressed: gold disc, slight squash, the hammer swings. */
+    #pad #drill-btn { position: fixed; right: calc(34px + env(safe-area-inset-right)); bottom: calc(48px + env(safe-area-inset-bottom));
+      width: 104px; height: 104px; margin: 0; padding: 0; border-radius: 50%; border: 3px solid rgb(var(--ink-rgb) / 0.55);
+      background: rgb(var(--cream-rgb) / 0.22); box-shadow: none; display: grid; place-items: center; touch-action: none;
+      -webkit-tap-highlight-color: transparent; }
+    /* the result card's buttons sat under the stick and hammer on phones (UI review P0) */
+    body:has(#overlay:not([hidden])) #pad, body.on-title #pad { display: none !important; }
+    #drill-btn .disc { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--ink); background: rgb(var(--cream-rgb) / 0.72);
+      box-shadow: 0 3px 0 var(--ink); display: grid; place-items: center; transition: transform .06s, background .06s; }
+    #drill-btn svg { color: var(--ink); width: 40px; height: 40px; transform: rotate(18deg); transition: transform .08s; }
+    #drill-btn.down .disc { background: rgb(var(--gold-rgb) / 0.95); transform: translateY(2px) scale(.92); box-shadow: 0 1px 0 var(--ink); }
+    #drill-btn.down svg { transform: rotate(-28deg); }
+    #pad #drill-btn:active { filter: none; }
+    body.pad-buttons #pad #drill-btn { position: static; } /* the d-pad layout keeps its flex row */
+    #title { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      padding-top: 7vh; pointer-events: none; transition: opacity .45s, transform .45s; }
+    #title[hidden] { display: none; }
+    #title.leaving { opacity: 0; transform: translateY(-30px); }
+    #title .logo { font-size: clamp(56px, 13vw, 120px); line-height: 1; color: var(--cream);
+      text-shadow: 3.5px 0.0px 0 var(--ink), 3.23px 1.34px 0 var(--ink), 2.47px 2.47px 0 var(--ink), 1.34px 3.23px 0 var(--ink), 0.0px 3.5px 0 var(--ink), -1.34px 3.23px 0 var(--ink), -2.47px 2.47px 0 var(--ink), -3.23px 1.34px 0 var(--ink), -3.5px 0.0px 0 var(--ink), -3.23px -1.34px 0 var(--ink), -2.47px -2.47px 0 var(--ink), -1.34px -3.23px 0 var(--ink), -0.0px -3.5px 0 var(--ink), 1.34px -3.23px 0 var(--ink), 2.47px -2.47px 0 var(--ink), 3.23px -1.34px 0 var(--ink), 0 8px 0 var(--ink); transform: rotate(-4deg); }
+    #title .logo .d { color: var(--gold); }
+    #title .logo .w { color: #8fd8ff; }
+    #title .sub { margin: 22px 0 0; font-size: clamp(var(--fs-m), 3.5vw, var(--fs-l)); color: var(--cream); text-shadow: 1.8px 0.0px 0 var(--ink), 1.27px 1.27px 0 var(--ink), 0.0px 1.8px 0 var(--ink), -1.27px 1.27px 0 var(--ink), -1.8px 0.0px 0 var(--ink), -1.27px -1.27px 0 var(--ink), -0.0px -1.8px 0 var(--ink), 1.27px -1.27px 0 var(--ink); }
+    /* UI review 7/8: the list sits on one solid panel (cream, ink border) with a header row for the
+       ★ total; translucent rows let the board's blocks show through and read as noise */
+    #stage-panel { pointer-events: auto; display: flex; flex-direction: column; margin-top: 14px; width: min(420px, calc(100vw - 32px));
+      padding: 8px 10px 10px; border: 3px solid var(--ink); border-radius: 18px; background: var(--cream); color: var(--ink); box-shadow: 0 5px 0 var(--ink); }
+    #stage-panel .panel-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 4px 6px; font-size: var(--fs-m); }
+    #stage-panel .stars-total { color: var(--gold-ink); }
+    #stage-list { display: flex; flex-direction: column; gap: 5px; min-height: 0; }
+    #stage-list .stage { text-align: left; font: inherit; padding: 4px 12px; border: 2px solid var(--ink); border-radius: 12px;
+      background: var(--white); color: var(--ink); box-shadow: 0 2px 0 var(--ink); cursor: pointer; }
+    /* UI review 13: a compact phone row was 28px; 44px is the touch minimum (align-content centres one-line
+       rows). flex: none: a set min-height drops the flex item's content floor, and the picked row got squeezed */
+    #stage-list .stage { flex: none; display: flow-root; min-height: 44px; align-content: center; }
+    #stage-list .stage b { font-size: var(--fs-m); font-weight: normal; }
+    #stage-list .stage.sel { padding: 8px 12px; }
+    #stage-list .stage small { display: block; font-size: var(--fs-xs); opacity: .8; }
+    #stage-list .stage small.best { color: var(--gold-ink); opacity: 1; }
+    #stage-list .stage.sel small.best { color: var(--gold-deep); } /* gold-on-gold was unreadable on the picked row */
+    #stage-list .stage.sel { background: var(--gold); } /* no sideways nudge: inside the panel it poked past the border */
+    #stage-list .stage.daily { background: var(--sky-pale); }
+    #stage-list .stage.daily.sel { background: var(--sky); }
+    /* locked: a flat grey tone instead of opacity (after .daily, so a locked daily greys too) */
+    #stage-list .stage.locked { background: #e3e0d8; color: #5d6273; border-color: var(--slate); box-shadow: 0 2px 0 var(--slate); cursor: default; }
+    #stage-list .stage.locked .stars { color: var(--slate); }
+    #stage-list .stage.locked.sel { background: #d3cfc5; border-color: var(--ink); box-shadow: 0 2px 0 var(--ink); }
+    #stage-list .stage .stars { float: right; color: var(--gold-ink); letter-spacing: 1px; }
+    #stage-list .stage .streak { float: right; color: var(--pink); }
+    /* UI review 9: the picked row's ★1/★2/★3 as chips, earned ones filled ink; the condition beside it at 14px */
+    #stage-list .stage .tiers { display: flex; flex-direction: column; gap: 3px; margin: 4px 0 2px; }
+    #stage-list .stage .tier { display: flex; align-items: flex-start; gap: 6px; font-size: var(--fs-s); line-height: 1.3; }
+    /* chips share one width so the conditions line up in a column */
+    #stage-list .stage .tier .chip { flex: none; min-width: 2.6em; text-align: center; padding: 0 4px; border: 2px solid var(--ink); border-radius: 8px; background: var(--cream);
+      color: var(--gold-ink); font-size: var(--fs-xs); line-height: 1.35; }
+    #stage-list .stage .tier.got .chip { background: var(--ink); color: var(--gold); }
+    #stage-list .stage .tier:not(.got) .t { opacity: .8; }
+    /* 📖 도감 (UI review 8/13): a 44px icon button beside 🔊 instead of a small text pill under the logo */
+    #title #collection { pointer-events: auto; position: fixed; top: calc(12px + env(safe-area-inset-top)); right: calc(64px + env(safe-area-inset-right));
+      display: flex; align-items: center; gap: 4px; min-width: 44px; height: 44px; padding: 0 10px; font: inherit; font-size: var(--fs-l); line-height: 1;
+      border: 3px solid var(--ink); border-radius: 12px; background: var(--cream); color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    #title #collection .n { font-size: var(--fs-s); color: var(--gold-ink); }
+    #title #collection:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    #title #collection[hidden] { display: none; }
+    #stage-list .stage small.next { opacity: .7; }
+    #stage-list { touch-action: pan-y; overscroll-behavior: contain; }
+    #stage-list .stage .go { display: inline-block; margin-top: 4px; padding: 1px 12px; border: 2px solid var(--ink); border-radius: 10px;
+      background: var(--cream); font-size: var(--fs-s); box-shadow: 0 2px 0 var(--ink); }
+    #title .press .taps { display: none; }
+    @media (pointer: coarse) { #title .press .keys { display: none; } #title .press .taps { display: inline; } }
+    /* Short landscape phones: everything stacked overflowed the screen. Small logo, no tagline,
+       and the list takes the rest of the height and scrolls. */
+    @media (max-height: 520px) {
+      #title { padding-top: 2vh; }
+      #title .logo { font-size: 40px; }
+      #title .sub { display: none; }
+      #stage-panel { margin-top: 6px; max-height: calc(100vh - 110px); padding: 4px 8px 6px; } /* the logo is 44px+ (short-screen rule below) */
+      #stage-panel .panel-head { margin-bottom: 3px; font-size: var(--fs-s); }
+      #stage-list { overflow-y: auto; padding: 2px 8px 4px 2px; }
+      #stage-list .stage { padding: 2px 10px; }
+      #title .press { display: none; } /* no room; the ▶ 시작 pill on the picked row says it */
+    }
+    /* Portrait phones: the camera frames the board edge to edge, so the camp and the penguin flock
+       only show on the title. Logo on top, the list docked at the bottom (compact rows, scrolls if
+       tall), and the snowline with the flock visible in between (owner choice, option 1). */
+    @media (max-aspect-ratio: 4/5) {
+      #title { padding-top: 5vh; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+      #title .logo { font-size: clamp(48px, 15vw, 90px); }
+      #title .sub { margin-top: 12px; }
+      #stage-panel { margin-top: auto; max-height: 50vh; padding: 6px 8px 8px; }
+      #stage-panel .panel-head { margin-bottom: 4px; font-size: var(--fs-s); }
+      #stage-list { gap: 3px; overflow-y: auto; padding: 2px 6px 4px 2px; }
+      #stage-list .stage { padding: 2px 10px; }
+      #stage-list .stage b { font-size: var(--fs-s); }
+      #stage-list .stage.sel { padding: 5px 10px; }
+      #stage-list .stage small { font-size: var(--fs-xs); }
+      #title .press { margin: 6px 0 0; font-size: var(--fs-xs); }
+    }
+    /* badge book (item 13): every badge, earned or still to chase, plus the running totals */
+    #book { position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; background: var(--scrim); }
+    #book[hidden] { display: none; }
+    /* a fixed-height card, so switching tabs never makes it jump; only the pane scrolls */
+    #book .card { display: flex; flex-direction: column; width: min(420px, calc(100vw - 32px));
+      height: min(560px, calc(100vh - 48px)); /* fallback where dvh is unknown */
+      height: min(560px, calc(100dvh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom))); padding: 10px 14px 12px 18px;
+      border: 3px solid var(--ink); border-radius: 16px; background: var(--cream); color: var(--ink); box-shadow: 0 4px 0 var(--ink); box-sizing: border-box; }
+    #book .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    #book h2 { margin: 0; font-size: var(--fs-l); font-weight: normal; }
+    #book-close { flex: none; width: 44px; height: 44px; margin-right: -4px; padding: 0; border: 3px solid var(--ink); border-radius: 50%;
+      background: var(--gold); color: var(--ink); font: inherit; font-size: var(--fs-l); line-height: 1; cursor: pointer; box-shadow: 0 3px 0 var(--ink); }
+    #book-close:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    #book .totals { margin: 4px 4px 8px 0; font-size: var(--fs-xs); opacity: .8; }
+    #book .tabs { display: flex; gap: 4px; margin-right: 4px; border-bottom: 3px solid var(--ink); }
+    #book .tabs button { flex: 1 1 0; min-width: 0; min-height: 44px; padding: 4px 2px; margin-bottom: -3px; border: 3px solid var(--ink);
+      border-radius: 10px 10px 0 0; background: #efe3c2; color: var(--ink); font: inherit; font-size: var(--fs-s); white-space: nowrap; cursor: pointer; opacity: .75; }
+    #book .tabs button[aria-selected="true"] { background: var(--cream); border-bottom-color: var(--cream); opacity: 1; }
+    #book .tabs button:focus-visible, #book-close:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+    #book .pane { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 10px 4px 2px 0; overscroll-behavior: contain; }
+    #book .pane[hidden] { display: none; }
+    #book ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    #book li { padding: 5px 10px; border: 2px solid var(--ink); border-radius: 10px; background: var(--paper); }
+    #book li.locked { opacity: .5; background: transparent; }
+    #book li b { font-weight: normal; font-size: var(--fs-m); }
+    #book li small { display: block; font-size: var(--fs-s); opacity: .8; }
+    #book h3 { margin: 0 0 6px; font-size: var(--fs-m); font-weight: normal; }
+    #book .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+    #book .day { display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 2px solid rgb(var(--ink-rgb) / .25);
+      border-radius: 8px; font-size: var(--fs-s); line-height: 1.2; opacity: .55; }
+    #book .day b { font-weight: normal; font-size: var(--fs-xs); }
+    #book .day.played { opacity: 1; border-color: var(--ink); background: var(--paper); }
+    #book .day.today { border-color: var(--pink); border-width: 3px; opacity: 1; }
+    #book #book-wear { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    #book #book-wear li { display: flex; flex-direction: column; justify-content: center; min-height: 44px; box-sizing: border-box; }
+    #book #book-wear li.got { cursor: pointer; }
+    #book #book-wear li.got:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+    #book #book-wear li.on { background: var(--mint); }
+    #book #book-wear i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border: 2px solid var(--ink); border-radius: 50%; vertical-align: -1px; }
+    /* locked outfit: a dashed silhouette swatch, greyed name, and the badge that earns it */
+    #book #book-wear li.locked { opacity: 1; border-style: dashed; border-color: rgb(var(--ink-rgb) / .45); color: rgb(var(--ink-rgb) / .6); }
+    #book #book-wear li.locked i { background: var(--ink) !important; opacity: .35; border-style: dashed; }
+    #book #book-wear li.locked small { opacity: 1; }
+    #book .close { margin: 8px 0 0; font-size: var(--fs-xs); opacity: .7; text-align: center; }
+    @media (pointer: coarse) { #book .close { display: none; } } /* fingers have the ✕ and the tabs */
+    @media (max-height: 520px) {
+      #book .card { height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); padding-top: 6px; }
+      #book .totals { display: none; } /* short landscape: the tabs and one row of content matter more */
+    }
+    /* touch hint: one line above the pad; on the title and for the first seconds of each run, then it fades off the board */
+    #hint-touch { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 142px);
+      width: max-content; max-width: calc(100vw - 32px); margin: 0; padding: 3px 12px; border: 2px solid var(--ink); border-radius: 12px;
+      background: rgb(var(--cream-rgb) / 0.9); color: var(--ink); font-size: var(--fs-xs); pointer-events: none; }
+    @media (pointer: coarse) { #hint-touch { display: block; } }
+    body:not(.on-title) #hint-touch { animation: hintAway .6s ease 8s forwards; }
+    @keyframes hintAway { to { opacity: 0; visibility: hidden; } }
+    /* short screens: the daily row, ★ total and medal lines made the title list taller; shrink the logo first */
+    @media (max-height: 760px) { #title { padding-top: 3vh; } #title .logo { font-size: clamp(44px, 10vw, 72px); } #title .sub { margin-top: 12px; }
+      #stage-list .stage small { font-size: var(--fs-xs); } }
+    /* portrait: the tilted logo's right end ran into the 📖/🔊 buttons (bottom at 56px), so it starts
+       under them (here, after the short-screen rule above, which sets its own padding) */
+    @media (max-aspect-ratio: 4/5) { #title { padding-top: calc(62px + env(safe-area-inset-top)); } }
+    #restart, #next-stage, #share, #to-stages { min-height: 44px; } /* the touch floor whatever the padding (UI review 13) */
+    #next-stage, #share { font: inherit; font-size: var(--fs-m); margin: 0 0 10px; padding: 8px 18px; border: 3px solid var(--ink); border-radius: 14px;
+      background: var(--sky); color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    #next-stage[hidden], #share[hidden] { display: none; }
+    #share { background: var(--cream); }
+    /* share fallback without a clipboard (plain-http LAN phone): a selectable line to copy by hand */
+    #share-text { display: block; width: min(360px, 100%); margin: 0 auto 10px; font: inherit; font-size: var(--fs-s); padding: 6px 8px;
+      border: 2px solid var(--ink); border-radius: 10px; background: var(--white); color: var(--ink); text-align: center; }
+    #share-text[hidden] { display: none; }
+    #to-stages { font: inherit; font-size: var(--fs-m); margin-top: 0; padding: 8px 18px; border: 3px solid var(--ink); border-radius: 14px;
+      background: var(--cream); color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    #title .press { margin-top: 14px; padding: 8px 20px; border: 3px solid var(--ink); border-radius: 16px; background: var(--cream);
+      color: var(--ink); box-shadow: 0 4px 0 var(--ink); font-size: clamp(var(--fs-s), 3vw, var(--fs-l)); animation: bob 1.2s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-6px); } }
+    /* under the air row (its bottom is ~93px since the HUD became one bar; 84px covered the bar) */
+    /* UI review 6: one line, as wide as its text (capped), so it covers as little of the board as it can */
+    #tip { position: fixed; top: calc(102px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: max-content; max-width: min(460px, calc(100vw - 32px));
+      display: flex; align-items: center; gap: 6px; margin: 0;
+      padding: 5px 12px; border: 3px solid var(--ink); border-radius: 14px; background: var(--cream); color: var(--ink); box-shadow: 0 3px 0 var(--ink);
+      font-size: var(--fs-s); line-height: 1.3; white-space: nowrap; pointer-events: none; z-index: 5; }
+    #tip[hidden] { display: none; }
+    #tip .ico { flex: none; }
+    #tip .txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; } /* a line too long for a phone ends in … instead of wrapping */
+    @media (max-width: 400px) { #tip { font-size: var(--fs-s); padding: 4px 10px; } }
+    @media (max-height: 520px) { #tip { top: calc(94px + env(safe-area-inset-top)); } }
+    /* the medal chip sits under the air bar on the left; on a phone the centred toast ran over it, so it steps below */
+    body:has(#medal-line:not([hidden])) #tip { top: calc(130px + env(safe-area-inset-top)); }
+    @media (max-height: 520px) { body:has(#medal-line:not([hidden])) #tip { top: calc(122px + env(safe-area-inset-top)); } }
+    #tip.show { animation: tipIn .25s ease-out; }
+    @keyframes tipIn { from { opacity: 0; transform: translate(-50%, -8px); } }
+    /* a rule toast fired at the finish line (500m tip) sat over the result card's stars */
+    body.on-title #tip, body:has(#overlay:not([hidden])) #tip { display: none; }
+    @media (max-width: 600px) { #style-label, #render-label, #hint { display: none; } }
+    /* dev-only labels: shown with ?dev (see script below) */
+    body:not(.dev) #style-label, body:not(.dev) #render-label, body:not(.dev) .dev-only { display: none; }
+    #hint { bottom: 12px; left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px);
+      padding: 4px 14px; border: 2px solid var(--ink); border-radius: 12px; background: rgb(var(--cream-rgb) / 0.9); color: var(--ink);
+      text-shadow: none; font-size: var(--fs-s); opacity: 1; transition: opacity .6s, visibility .6s; }
+    /* UI review 5: the title has its own key line; in play the hint goes after the first 20s of play (syncHint) */
+    body.on-title #hint, body.hint-done:not(.dev) #hint { opacity: 0; visibility: hidden; }
+    #score, #lives { display: inline-block; }
+    .bump { animation: bump .22s ease-out; }
+    .hurt { animation: hurt .45s ease-out; }
+    @keyframes bump { 40% { transform: scale(1.18); } }
+    /* sound toggle on the title (the M key works everywhere); in a run it lives in the pause menu */
+    #mute { position: fixed; top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); z-index: 4;
+      width: 44px; height: 44px; padding: 0; font-size: var(--fs-l); line-height: 1;
+      border: 3px solid var(--ink); border-radius: 12px; background: var(--cream); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    body:not(.on-title) #mute { display: none; }
+    #mute:active, #pause-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    /* pause button, docked at the end of the top bar; 44px = the minimum touch target */
+    #pause-btn { flex: none; width: 44px; min-height: 44px; padding: 0; font: inherit; font-size: var(--fs-l); line-height: 1; pointer-events: auto;
+      border: 3px solid var(--ink); border-radius: 14px; background: var(--cream); color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    /* the old fixed mute/pause buttons (z 4) poked over the result card's corner on phones; inside
+       the HUD they stack under the card, and ⏸ has nothing to pause there anyway */
+    body.on-title #pause-btn, body:has(#overlay:not([hidden])) #pause-btn { visibility: hidden; }
+    /* pause menu (UI review 15): blur, a hidden tab, ⏸, Esc or P opens it */
+    #pause { position: fixed; inset: 0; z-index: 7; display: flex; align-items: center; justify-content: center; padding: 16px; background: var(--scrim); }
+    #pause[hidden] { display: none; }
+    #pause .card { display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: min(300px, 100%); max-height: calc(100vh - 32px);
+      overflow-y: auto; padding: 16px 18px 18px; border: 4px solid var(--ink); border-radius: 22px; background: var(--cream); color: var(--ink); box-shadow: 0 6px 0 var(--ink); }
+    #pause h2 { margin: 0 0 2px; font-size: var(--fs-xl); font-weight: normal; text-align: center; }
+    /* 44px floor (UI review 13): the short-landscape grid trims the padding to 6px */
+    #pause button { min-height: 44px; font: inherit; font-size: var(--fs-m); padding: 9px 14px; border: 3px solid var(--ink); border-radius: 14px; background: var(--white);
+      color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; }
+    #pause button.primary { font-size: var(--fs-l); background: var(--gold); box-shadow: 0 4px 0 var(--ink); }
+    #pause button:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    #pause .key { font-size: var(--fs-s); opacity: .6; }
+    @media (pointer: coarse) { #pause .key { display: none; } }
+    @media (max-height: 520px) {
+      #pause .card { width: min(560px, 100%); display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 14px 14px; }
+      #pause h2 { grid-column: 1 / -1; font-size: var(--fs-l); }
+      #pause button.primary { grid-column: 1 / -1; font-size: var(--fs-l); padding: 6px 14px; }
+      #pause button { padding: 6px 10px; font-size: var(--fs-m); }
+    }
+    @keyframes hurt { 20% { transform: scale(1.35) rotate(-8deg); filter: brightness(1.6); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+      /* Text outlines are ring text-shadows, not -webkit-text-stroke: Safari/iOS ignore paint-order on
+       HTML text, so the stroke was drawn over the glyphs (half inside) and Korean letters looked
+       doubled and broken on iPhones and Mac Safari. */
+    #update { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 60;
+      padding: 10px 18px; border: 3px solid var(--ink); border-radius: 16px; background: var(--gold); color: var(--ink); font: inherit;
+      font-size: var(--fs-m); box-shadow: 0 3px 0 var(--ink); white-space: nowrap; }
+    #build-tag { position: fixed; right: 8px; bottom: calc(4px + env(safe-area-inset-bottom)); margin: 0; font-size: 11px; color: var(--cream); opacity: .45; }
+    /* loading screen */
+    #loading { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: radial-gradient(ellipse at 50% 30%, #2f6fb5 0%, #163d7a 55%, #0b1a3d 100%); color: #fdf6e3;
+      font-family: 'Jua', system-ui, sans-serif; transition: opacity .45s; }
+    #loading.done { opacity: 0; pointer-events: none; }
+    #loading .ld-logo { font-size: clamp(48px, 12vw, 96px); line-height: 1; text-shadow: 3.5px 0.0px 0 #1b2238, 3.23px 1.34px 0 #1b2238, 2.47px 2.47px 0 #1b2238, 1.34px 3.23px 0 #1b2238, 0.0px 3.5px 0 #1b2238, -1.34px 3.23px 0 #1b2238, -2.47px 2.47px 0 #1b2238, -3.23px 1.34px 0 #1b2238, -3.5px 0.0px 0 #1b2238, -3.23px -1.34px 0 #1b2238, -2.47px -2.47px 0 #1b2238, -1.34px -3.23px 0 #1b2238, -0.0px -3.5px 0 #1b2238, 1.34px -3.23px 0 #1b2238, 2.47px -2.47px 0 #1b2238, 3.23px -1.34px 0 #1b2238, 0 6px 0 #1b2238; transform: rotate(-4deg); }
+    #loading .ld-logo .d { color: #f5c542; }
+    #loading .ld-logo .w { color: #8fd8ff; }
+    #loading .ld-dog { font-size: 44px; animation: ld-bob .5s ease-in-out infinite alternate; }
+    #loading .ld-dirt { display: inline-block; font-size: 30px; margin-left: 4px; transform-origin: 80% 80%; animation: ld-swing .5s ease-in-out infinite alternate; }
+    #loading .ld-track { width: min(280px, 70vw); height: 18px; border: 3px solid #1b2238; border-radius: 12px; background: #fdf6e3;
+      box-shadow: 0 3px 0 #1b2238; overflow: hidden; }
+    #loading-bar { height: 100%; background: linear-gradient(#ffe08a, #f5c542); transform-origin: left; transform: scaleX(0); transition: transform .2s; }
+    #loading .ld-text { margin: 0; font-size: 17px; text-shadow: 1.8px 0.0px 0 #1b2238, 1.27px 1.27px 0 #1b2238, 0.0px 1.8px 0 #1b2238, -1.27px 1.27px 0 #1b2238, -1.8px 0.0px 0 #1b2238, -1.27px -1.27px 0 #1b2238, -0.0px -1.8px 0 #1b2238, 1.27px -1.27px 0 #1b2238; }
+    @keyframes ld-bob { to { transform: translateY(-6px); } }
+    @keyframes ld-swing { from { transform: rotate(-30deg); } to { transform: rotate(20deg); } }
+    @media (prefers-reduced-motion: reduce) { #loading .ld-dog, #loading .ld-dirt { animation: none; } }
