@@ -9,7 +9,11 @@ const CACHE = 'dig-down-__BUILD__';
 const PRECACHE = __PRECACHE__;
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  // cache: 'reload' skips the browser's HTTP cache (GitHub Pages sends max-age=600): otherwise a
+  // new worker could precache the previous deploy's unhashed files (sprites, page)
+  e.waitUntil(caches.open(CACHE)
+    .then((c) => c.addAll(PRECACHE.map((u) => new Request(u, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(
@@ -33,7 +37,8 @@ self.addEventListener('fetch', (e) => {
   }
   if (url.origin !== self.location.origin) return;
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then((r) => {
+    // no-store: always the live page when online (an HTTP-cached copy kept old builds up to 10 min)
+    e.respondWith(fetch(req, { cache: 'no-store' }).then((r) => {
       const copy = r.clone();
       caches.open(CACHE).then((c) => c.put(req, copy));
       return r;
