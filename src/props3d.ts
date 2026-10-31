@@ -139,7 +139,8 @@ const FLAP = THREE.MathUtils.degToRad(40), FLAP_RATE = 18; // wing lift (the rig
 const DRAW_RANGE = 24;
 
 export function addProps(d: PropDeps): Props {
-  const loader = new GLTFLoader();
+  // own manager: CDN props stream in behind the game and must not hold the loading screen
+  const loader = new GLTFLoader(new THREE.LoadingManager());
   const cache = new Map<string, Promise<{ scene: THREE.Object3D; clips: THREE.AnimationClip[] }>>();
   const load = (id: string) => {
     if (!cache.has(id)) cache.set(id, loader.loadAsync(`${DIR}${id}.glb`).then((g) => ({ scene: g.scene, clips: g.animations })));

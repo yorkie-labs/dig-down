@@ -382,9 +382,34 @@
       #pause button { padding: 6px 10px; font-size: var(--fs-m); }
     }
     @keyframes hurt { 20% { transform: scale(1.35) rotate(-8deg); filter: brightness(1.6); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
-  </style>
+      /* loading screen */
+    #loading { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: radial-gradient(ellipse at 50% 30%, #2f6fb5 0%, #163d7a 55%, #0b1a3d 100%); color: #fdf6e3;
+      font-family: 'Jua', system-ui, sans-serif; transition: opacity .45s; }
+    #loading.done { opacity: 0; pointer-events: none; }
+    #loading .ld-logo { font-size: clamp(48px, 12vw, 96px); line-height: 1; -webkit-text-stroke: 6px #1b2238; paint-order: stroke fill;
+      text-shadow: 0 6px 0 #1b2238; transform: rotate(-4deg); }
+    #loading .ld-logo .d { color: #f5c542; }
+    #loading .ld-logo .w { color: #8fd8ff; }
+    #loading .ld-dog { font-size: 44px; animation: ld-bob .5s ease-in-out infinite alternate; }
+    #loading .ld-dirt { display: inline-block; font-size: 30px; margin-left: 4px; transform-origin: 80% 80%; animation: ld-swing .5s ease-in-out infinite alternate; }
+    #loading .ld-track { width: min(280px, 70vw); height: 18px; border: 3px solid #1b2238; border-radius: 12px; background: #fdf6e3;
+      box-shadow: 0 3px 0 #1b2238; overflow: hidden; }
+    #loading-bar { height: 100%; background: linear-gradient(#ffe08a, #f5c542); transform-origin: left; transform: scaleX(0); transition: transform .2s; }
+    #loading .ld-text { margin: 0; font-size: 17px; -webkit-text-stroke: 3px #1b2238; paint-order: stroke fill; }
+    @keyframes ld-bob { to { transform: translateY(-6px); } }
+    @keyframes ld-swing { from { transform: rotate(-30deg); } to { transform: rotate(20deg); } }
+    @media (prefers-reduced-motion: reduce) { #loading .ld-dog, #loading .ld-dirt { animation: none; } }
+</style>
 </head>
 <body>
+  <!-- loading screen: plain HTML/CSS so it shows while the JS bundle downloads (src/loading.ts) -->
+  <div id="loading" role="progressbar" aria-label="불러오는 중">
+    <div class="ld-logo"><span class="d">Dig</span> <span class="w">Down</span></div>
+    <div class="ld-dog" aria-hidden="true">🐶<span class="ld-dirt">⛏️</span></div>
+    <div class="ld-track"><div id="loading-bar"></div></div>
+    <p class="ld-text">얼음 파는 중… <span id="loading-pct">0%</span></p>
+  </div>
   <canvas id="game"></canvas>
   <canvas id="fx"></canvas>
   <div id="hud">

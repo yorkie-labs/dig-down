@@ -3,6 +3,7 @@
 // chunk, a painted ice-cave backdrop with parallax cliffs and icicles, and a flat 2D hero.
 // Input/HUD code is copied from main.ts on purpose (spike, not shared yet).
 import * as THREE from 'three';
+import './loading'; // first: hooks the loading manager before any texture starts loading
 import { addProps } from './props3d';
 import {
   Badge, BADGES, Cosmetic, COSMETICS, cosmeticForBadge, CosmeticSlot, dailyHistory, dailyOf, dailyRecord, dailyShareText, equippedCosmetics,
@@ -99,11 +100,20 @@ const shaftMidY = shaftTop - shaftH / 2;
 let seed = 7;
 const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
-function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, repeatY = 1) {
+// Code-drawn textures are supersampled: draw callbacks keep their logical w×h coordinates, the
+// canvas holds k× the pixels. At 1× the ink outlines (mountains, pines) showed stair-steps on
+// Retina screens, where the game canvas already renders at 2×. k is capped so no side passes
+// 4096px and no texture passes ~4.2M px (16MB) — phone GPU memory — and stays 2 on 1× screens.
+// Soft layers (gradients, washes) pass superMax 2: extra pixels buy nothing there.
+const TEX_SUPER = (window.devicePixelRatio || 1) >= 1.5 ? 4 : 2;
+function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, repeatY = 1, superMax = TEX_SUPER) {
   const c = document.createElement('canvas');
-  c.width = w;
-  c.height = h;
-  draw(c.getContext('2d')!);
+  const k = Math.max(1, Math.min(superMax, Math.floor(4096 / Math.max(w, h)), Math.floor(Math.sqrt(4.2e6 / (w * h)))));
+  c.width = w * k;
+  c.height = h * k;
+  const g = c.getContext('2d')!;
+  g.scale(k, k);
+  draw(g);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.wrapS = THREE.ClampToEdgeWrapping;
@@ -146,7 +156,7 @@ const farTex = canvasTex(512, 512, (g) => {
     g.fillStyle = 'rgba(255,255,255,0.7)';
     g.fillRect(rnd() * 512, rnd() * 512, 2, 2);
   }
-}, shaftH / 14);
+}, shaftH / 14, 2); // soft wash: 2× is plenty
 // square texels: the 512px tile spans 14 units both ways (it was stretched 1.8x horizontally)
 farTex.wrapS = THREE.RepeatWrapping;
 farTex.repeat.x = 26 / 14;
@@ -198,8 +208,8 @@ function fitCliffs() {
 }
 
 // ---- surface scene (painted like the cliffs: gouache fills, inked edges) ----
-const surfaceTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void) => {
-  const t = canvasTex(w, h, draw);
+const surfaceTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, superMax?: number) => {
+  const t = canvasTex(w, h, draw, 1, superMax);
   t.wrapT = THREE.ClampToEdgeWrapping;
   return t;
 };
@@ -234,7 +244,7 @@ const skyTex = surfaceTex(1024, 512, (g) => {
     }
   }
   g.filter = 'none';
-});
+}, 2); // gradient + stars: 2× is plenty
 const sky = new THREE.Mesh(new THREE.PlaneGeometry(70, 26), new THREE.MeshBasicMaterial({ map: skyTex, fog: false }));
 placeDeep(sky, 4, shaftTop + 11, -22);
 scene.add(sky);
