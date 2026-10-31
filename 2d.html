@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>Dig Down</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="hud">
+    <div class="hud-row">
+      <span id="lives"></span>
+      <span id="score"></span>
+      <span id="depth"></span>
+    </div>
+    <div id="air" role="meter" aria-label="공기" aria-valuemin="0" aria-valuemax="100">
+      <div id="air-fill"></div>
+      <span id="air-text"></span>
+    </div>
+  </div>
+  <p id="hint">←→ 이동 · ↑↓ 방향 · Space/Z 드릴 · R 재시작</p>
+  <div id="overlay" hidden>
+    <p id="overlay-title"></p>
+    <dl id="overlay-stats"></dl>
+    <button id="restart" type="button">다시 하기 (R)</button>
+  </div>
+  <div id="pad">
+    <div class="dpad">
+      <button data-dir="up" aria-label="위">▲</button>
+      <button data-dir="left" aria-label="왼쪽">◀</button>
+      <button data-dir="down" aria-label="아래">▼</button>
+      <button data-dir="right" aria-label="오른쪽">▶</button>
+    </div>
+    <button id="drill-btn" aria-label="드릴">DRILL</button>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

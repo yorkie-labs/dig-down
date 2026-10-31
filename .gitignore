@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+# Polyfork models are hotlinked from polyfork.dev at runtime; its licence forbids redistributing the files
+public/models/polyfork/
+# Tripo free-plan exports are non-commercial: keep them out of the published repo
+assets/character/*tripo*
+# Tripo-derived (decimated) puppy from the 3D spike, unused now and non-commercial
+public/models/puppy.glb

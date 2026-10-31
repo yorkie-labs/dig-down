@@ -1,0 +1,710 @@
+{
+  "summary": "Research Mr. Driller stage structures and design a stage system for Dig Down",
+  "agentCount": 5,
+  "logs": [
+    "research returned 3/3"
+  ],
+  "result": {
+    "research": [
+      {
+        "findings": [
+          {
+            "claim": "Original Mr. Driller (arcade, 1999) offered just two goal lengths, a 500m Challenge and a 1000m Challenge. The console ports added Time Attack (clear a course before a record time) and Survival (endless, drill as long as possible).",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller ; https://en.wikipedia.org/wiki/Mr._Driller_(video_game)"
+          },
+          {
+            "claim": "Mr. Driller 1 Time Attack had 10 named, themed courses: Subway, Classic, Armory, Egypt, Nessie, Ice Age, Dinosaur, Ammonite, Mansion, Lab. The player collects clocks to cut the elapsed time. One of the themed courses is literally an 'Ice Age' course.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller ; https://en.wikipedia.org/wiki/Mr._Driller_(video_game)"
+          },
+          {
+            "claim": "In the original, the backgrounds change as you go deeper (surface, then dinosaur bones, ammonite fossils, then underground dwellings), so depth is shown as a change of place. Later entries simplified these backgrounds.",
+            "basis": "sourced",
+            "source": "https://namu.wiki/w/미스터%20드릴러"
+          },
+          {
+            "claim": "Mr. Driller 2 'Mission Driller' is a short helicopter world-tour story: India 500m (Easy), then America 1000m (Normal), then Egypt 2000m (Hard). Clearing the first three unlocks a 4th extra stage, 'The North', at 2000m (Very Hard). Each stage is both longer and harder than the last, and the secret stage is a reward for clearing the rest.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller_2 ; https://en.wikipedia.org/wiki/Mr._Driller_2"
+          },
+          {
+            "claim": "The Mr. Driller 2 arcade marketing split the modes by audience: 500m 'for beginners... easier than the first version', and 2000m 'for experts... the wider and deeper stage'. Namu.wiki says the advanced course is 15 columns wide and 2000m deep, and that many players complained it was too difficult.",
+            "basis": "sourced",
+            "source": "https://bandainamco-am.co.jp/am/english/aa/mrdriller2/ ; https://en.namu.wiki/w/미스터%20드릴러%202"
+          },
+          {
+            "claim": "Series field widths: 9 columns is standard, beginner and handheld versions use 7, and advanced stages use 15. Board width is itself a difficulty setting for each stage.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー (series article)"
+          },
+          {
+            "claim": "In Mr. Driller 2's secret North stage, air-capsule supply is deliberately irregular: some levels spawn only one capsule, while others spawn so many they feel useless. Changing the capsule supply is a tool for giving a stage its own identity.",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/미스터%20드릴러%202"
+          },
+          {
+            "claim": "Mr. Driller 2 Time Attack has 10 normal courses (A-J, 500m to 1500m, time limits from 16s to 1m45s) plus 10 'Reverse' EXT courses with tighter limits (10s to 1m23s). Its silver X-blocks appear only in Time Attack and cannot be destroyed. Time Attack also gives unlimited air.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller_2 ; https://en.wikipedia.org/wiki/Mr._Driller_2"
+          },
+          {
+            "claim": "The series has several special block types. Crystal blocks disappear on their own after a timer. White blocks cannot connect to each other and have to be drilled directly. Iron blocks cannot be destroyed except by turning them into crystal.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー"
+          },
+          {
+            "claim": "Mr. Driller G keeps the 4-country Mission ladder (India 500 / America 1000 / Egypt 2000 / North 2000) and replaces Endless mode with an endless 'Space' stage in Mission, which has its own '? Items'.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller_G"
+          },
+          {
+            "claim": "Mr. Driller G characters have qualitative trade-offs (no numbers given). Susumu is the baseline. Anna runs slightly faster but uses air slightly faster. Puchi (the dog) can climb two blocks at once and uses air slightly slower. Holinger-Z survives one crush. Taizo drills much faster but runs much slower and uses much more air. Ataru runs much faster but drills much slower and uses much more air.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller_G"
+          },
+          {
+            "claim": "Dristone modes (Mr. Driller G on PS, Drill Spirits JP/EU, Ace) change the economy: air is spent per action, about 1% per dig, instead of over time, so the goal becomes drilling as little as possible. In Ace, being squashed costs 20% air.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー ; https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits ; https://en.wikipedia.org/wiki/Mr._Driller_A"
+          },
+          {
+            "claim": "Drill Spirits (DS) Pressure Driller is an endless stage where a giant 'Destroyer Drill' chases you. You collect orange energy capsules and fire blasts at the drill when its weak spot is exposed. Taizo drills faster and Holinger-Z can take an extra hit.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits"
+          },
+          {
+            "claim": "Drill Spirits splits countries across modes: Mission (Driller Lab, Japan, China, India, Egypt, America, Moon), Pressure (Korea, China, Germany, Italy, Brazil, Mexico) and Dristone (Japan, China, Denmark, France, Russia, North Pole). The Moon stage is missing from the NA release. I saw this list only in a search-result summary and did not read it on the source page.",
+            "basis": "inferred",
+            "source": "WebSearch summary citing https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits (page fetch did not list stages)"
+          },
+          {
+            "claim": "Mr. Driller Drill Land (GameCube, 2002) recasts the modes as theme-park attractions, each with a different rule twist. World Tour is standard play across countries. Star Driller has flashing Star Blocks that vanish after a moment, plus interference events like 'solar eclipse' and 'white comet'. Hole of Druaga is Anna-only and Dristone-based: find a key, open a door, beat a boss. Horror Night House is dark, its blocks hide ghosts that attack when dug, and you weaken them with holy water and collect the crystals they drop. Drindy Adventure is Taizo-only, has no air and has traps (rolling boulders, spikes), and same-colour 4+ groups do NOT pop there.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; https://ja.wikipedia.org/wiki/ミスタードリラー_ドリルランド"
+          },
+          {
+            "claim": "In Drill Land, clearing attractions earns stamps that lead to boss battles with Dr. Manhole. Some attractions are locked to one character, which ties a character to a rule set. The 2020 remaster (Mr. DRILLER DrillLand) keeps the five attractions and adds a Casual mode for beginners.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; https://en.wikipedia.org/wiki/Mr._Driller_DrillLand"
+          },
+          {
+            "claim": "Mr. Driller Online has a Challenge mode that adds a randomly chosen challenge to each section of the level, such as finishing within a time limit or picking up only a limited number of air capsules.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Online"
+          },
+          {
+            "claim": "Mr. Driller A / Ace (GBA, 2002, JP only) is an RPG-like dig. Air drains 1% per block destroyed. Underground buildings hold Undergrounders who give tips, shops, and 'Travel' exits. Depth earns 'mileage points' that buy speed upgrades and shields. There are Pooka/Fygar battles, and a Pacteria virtual pet (150+ species) grows as you drill.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_A ; https://mrdriller.fandom.com/wiki/Pacteria (via search summary)"
+          },
+          {
+            "claim": "No source I read gave per-stage numbers for colour count, air drain or block mix (e.g. India vs Egypt). The differences that are documented are length, field width, capsule supply (North) and special-block/rule twists. Numeric per-stage tuning should be treated as unknown.",
+            "basis": "inferred",
+            "source": "absence across fetched pages above"
+          }
+        ],
+        "ideas_for_us": [
+          "Use the Mr. Driller 2 world-tour structure on ice: 3 named stages with rising length and difficulty, for example Snowy Garden 300m (7 columns, 3 colours), Frozen Lake 500m (9 columns, the current game) and Glacier Core 1000m (9 or 11 columns). Clearing all three unlocks a secret 'Aurora' 1000m stage with erratic air capsules, like MD2's North stage.",
+          "Give each stage one rule twist, as Drill Land's attractions do, so players have to learn a new pattern per stage: crystal 'thin ice' that melts on a timer (Star Driller), white 'snow-packed' blocks that never chain (forcing manual digs), iron 'permafrost' that only turns breakable when it touches a melting block, and dark 'blizzard' visibility (Horror Night House).",
+          "Make capsule supply a stage parameter, not a constant. A scarce-air stage rewards chain-for-air (our +3n% twist) and a flood stage rewards score chasing. Veterans will plan routes around chains in one and score in the other.",
+          "Add an air-per-action 'Puzzle Igloo' mode based on Dristone: about 1% air per hammer swing and no time drain. That rewards planning the fewest swings, the most direct 'discovering strategy patterns' mode, where experts and beginners will play visibly differently.",
+          "Add a Pressure-style chase stage: an avalanche or a giant ice-drill comes down from above at a fixed speed, so it is endless and about speed rather than air. Optionally add charge capsules to push it back.",
+          "Unlock extra characters with MG-style trade-offs: Yorkie (baseline), a husky (smashes faster, uses more air), a penguin (walks faster, uses more air, climbs 2), and a robot sled (survives one crush). Character choice then becomes part of route strategy. Keep the trade-offs qualitative until playtested.",
+          "Add a Time Attack course set with fixed (seeded) layouts, clocks to collect and unlimited air, plus 'Reverse' variants with tighter limits. Fixed layouts let players share and optimise routes, which is where T-spin-like discoveries happen.",
+          "Change the background with depth, like MD1's fossils and dwellings: snow surface, then frozen fish, mammoth, ice caves, and a buried village at 500m. The Clear row at each level boundary is a natural place to change scenery.",
+          "Add Online-style optional per-segment challenges (for example 'reach 200m with no capsules' or 'clear this 100m in 40s') as badges. They give veterans goals without making the game harder for beginners."
+        ]
+      },
+      {
+        "findings": [
+          {
+            "claim": "Mr. Driller (PS1, original) manual: Brown X-blocks need five strikes and breaking one costs 20% air. Below 30% air a skull appears with an alarm and countdown, and it goes away once air is back above 30%. The manual gives no number for an air capsule, only that each one 'restores some' air. Choice it creates: whether to drill an X block (air cost) or walk around it.",
+            "basis": "sourced",
+            "source": "https://secure.cdn.us.playstation.com/manuals/classic/games/mr-driller-manual-en.pdf"
+          },
+          {
+            "claim": "Mr. Driller (original) scoring per the manual: 10 points per drilled block and 30 points per block in a 4+ group that pops. Air capsules pay 100, 200, 300 and so on, rising by 100 each. Reaching the goal pays 30,000 per unused life, and seconds left under each level's 'regulation time' turn into Time Bonus points. Choice it creates: keeping lives and moving fast both pay, so a safe, slow descent and a risky, fast one are scored differently.",
+            "basis": "sourced",
+            "source": "https://secure.cdn.us.playstation.com/manuals/classic/games/mr-driller-manual-en.pdf"
+          },
+          {
+            "claim": "Undergrounder bonus in the original Mr. Driller manual: popping groups of X-blocks earns hidden points. After 30 X-blocks have been popped this way, an Undergrounder shows up behind a normal block and is worth 765 points. Choice it creates: veterans deliberately stack X blocks into 4+ groups instead of avoiding them. Separately, a fan wiki says that across the series, waking 20 Undergrounders gives an extra life.",
+            "basis": "sourced",
+            "source": "https://secure.cdn.us.playstation.com/manuals/classic/games/mr-driller-manual-en.pdf ; https://mrdriller.fandom.com/wiki/Undergrounders (search snippet only, page returned 402)"
+          },
+          {
+            "claim": "Original Time Attack mode: there is no air. Air capsules are replaced by clocks, and grabbing one subtracts the time printed on it from your elapsed time. Breaking an X-block adds 5 seconds. You get one life and 10 courses that unlock as you go. Survival mode gives one life, with Hard starting at 1,000m and Expert at 2,000m.",
+            "basis": "sourced",
+            "source": "https://secure.cdn.us.playstation.com/manuals/classic/games/mr-driller-manual-en.pdf"
+          },
+          {
+            "claim": "Mr. Driller 2 added Crystal Blocks, which disappear by themselves after a while, as its main new block. Its Mission mode is a run of countries: India 500m (Easy), America 1,000m (Normal), Egypt 2,000m (Hard) and The North 2,000m (Very Hard). Air capsules restore 20%. Time Attack has Normal and Reverse sets of 10 courses each (500m to 1,500m), with limits from 10s to 1m45s.",
+            "basis": "sourced",
+            "source": "https://digdug.miraheze.org/wiki/Mr._Driller_2"
+          },
+          {
+            "claim": "According to namu.wiki, Mr. Driller 2 had a 15-column, 2000m advanced course that players criticised at first. Its secret North Pole stage has irregular oxygen, with only one capsule on some levels. In the endless mode, levels 31-40 and 71-80 have no crystal blocks. These came through a machine summary of the page, so check them before relying on them.",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/%EB%AF%B8%EC%8A%A4%ED%84%B0%20%EB%93%9C%EB%A6%B4%EB%9F%AC%202"
+          },
+          {
+            "claim": "Mr. Driller G added White Blocks, which never stick to any other block. That breaks the usual chain logic, so the player has to drill them directly or remove them with an item. A wiki also describes Crystal blocks as each running on its own timer. Choice it creates: white blocks can be used as safe pillars but block chain setups.",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/%EB%AF%B8%EC%8A%A4%ED%84%B0%20%EB%93%9C%EB%A6%B4%EB%9F%AC%20G ; Japanese Wikipedia summary https://ja.wikipedia.org/wiki/ミスタードリラー"
+          },
+          {
+            "claim": "Mr. Driller G '?' item blocks give a random effect, good or bad. Good: full air, screen clear, higher max oxygen, slower speed, a barrier. Bad: recolouring blocks, rotating the screen 90 or 180 degrees, halving oxygen. English Wikipedia lists shields and full oxygen restore as power-ups new to the series in G. Choice it creates: gamble on the box or skip it.",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/%EB%AF%B8%EC%8A%A4%ED%84%B0%20%EB%93%9C%EB%A6%B4%EB%9F%AC%20G ; https://en.wikipedia.org/wiki/Mr._Driller_G"
+          },
+          {
+            "claim": "Dristone mode (G, Drill Spirits JP/EU, Drill Till You Drop on DSiWare): air drops per block drilled (Wikipedia says 1%, Pocketgamer says '1 unit') instead of over time. Dristone gems can turn one colour into another, wipe every block of one colour, or give a one-hit shield. A wiki snippet also mentions Dristones that turn a colour into white or crystal blocks. Choice it creates: air becomes a count of drills, so the game turns into route planning and finding the fewest drills.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_G ; https://www.pocketgamer.com/mr-driller-drill-spirits/mr-driller-drill-spirits/ ; https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits"
+          },
+          {
+            "claim": "In Mr. Driller A (GBA), oxygen drops by 1% per block destroyed instead of over time. Mileage points from descending buy speed boosters and shields. The game has RPG-style fights against Pooka and Fygar, Undergrounder houses with tips, shops, and Pacteria, a virtual pet you feed with fruit you pick up.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_A"
+          },
+          {
+            "claim": "Star Driller (Drill Land), based on the Space Stage in Mr. Driller G: 'Star Blocks' flash and disappear after a short moment, which can drop other blocks onto the player. Item boxes give random power-ups that can help or hurt. Choice it creates: you can wait for a star block to vanish (losing time and air) or drill through it, and you have to read in advance what falls when it goes.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; https://videochums.com/review/mr-driller-drill-land"
+          },
+          {
+            "claim": "Hole of Druaga (Drill Land): the dungeon is randomly generated. There is no time limit, but you have a limited number of drill uses. You explore side caves to find a key at the bottom that opens a door in the main passage. Colour-coded slimes, knights and wizards wander around and break the blocks near them. Dragon mini-bosses roar to break blocks around you. To beat the final boss Druaga you use a 'destroy' Dristone that matches its aura colour, or a 'change' Dristone to make the colours match. Reviewers say getting lost makes success feel like luck.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; https://www.siliconera.com/mr-driller-drillland-brings-the-franchises-best-entry-to-the-world/ ; https://videochums.com/review/mr-driller-drill-land"
+          },
+          {
+            "claim": "Horror Night House (Drill Land): ghosts possess coloured blocks, and drilling a possessed block costs health. You pick up Holy Water, inject it into a group of blocks to trap the ghosts, then drill the stunned ghosts. Beaten ghosts become crystals ('Drystals'), and you need enough of them to clear the floor, so a floor ends on a quota rather than a depth. Holy Water gets scarcer on each floor. The visuals are deliberately dim and light up where Holy Water is used, which is the closest thing in the series to a darkness/lantern stage.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; https://www.siliconera.com/mr-driller-drillland-brings-the-franchises-best-entry-to-the-world/ ; Nintendo Life search snippet"
+          },
+          {
+            "claim": "Drindy Adventure (Drill Land): there are no air capsules and air never runs out. You get three lives, and the hazards are spike traps, flame jets and rolling boulders. The goal is to collect a set number of gold statues and get to the bottom. A reviewer notes you can use fixed structures and leftover blocks to steer the boulders, so the stage leans on environment puzzles.",
+            "basis": "sourced",
+            "source": "https://www.siliconera.com/mr-driller-drillland-brings-the-franchises-best-entry-to-the-world/ ; Nintendo Life Drill Land retro review search snippet"
+          },
+          {
+            "claim": "Drill Land's World Drill Tour has characters with different stats and abilities: Puchi jumps higher, and Holinger-Z survives one crush per run. Every mode has 3 difficulty levels plus a special variant. Play earns Bits that buy support items, figures and cards.",
+            "basis": "sourced",
+            "source": "https://www.siliconera.com/mr-driller-drillland-brings-the-franchises-best-entry-to-the-world/ ; https://videochums.com/review/mr-driller-drill-land"
+          },
+          {
+            "claim": "Drill Spirits (DS) has 7 mission stages that get progressively deeper. Clearing stages and piling up depth lets you buy speed-ups, extra air, extra lives and anti-crush barriers in a shop. In Pressure Driller, the Destroyer Drill chases you through an endless stage. You collect orange energy capsules and fire blasts at it when its weak spot opens. Choice it creates: detour sideways for energy or keep going down to stay ahead.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits ; https://www.pocketgamer.com/mr-driller-drill-spirits/mr-driller-drill-spirits/"
+          },
+          {
+            "claim": "Mr. Driller Online (Xbox 360, 2008): treasure chests hold items that 'should be used wisely', which implies you choose when to use them. Its Challenge mode gives each section of a level a randomly chosen objective.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Mr._Driller_Online"
+          },
+          {
+            "claim": "Hard blocks that can't be drilled normally (iron) show up in a Japanese Wikipedia summary as indestructible blocks that some modes can turn into crystal blocks. I could not confirm which game they come from on a page I read in full.",
+            "basis": "inferred",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー (machine summary, unverified)"
+          },
+          {
+            "claim": "Pattern across the series: the stage-specific modes change which resource is under pressure. Air over time becomes air per drill (Dristone, A), drill uses (Druaga), clocks (Time Attack), lives only with environmental hazards (Drindy), or a collection quota (Horror Night). Each change makes a different skill the deciding one: speed, efficient routes, exploration, or reading hazards.",
+            "basis": "inferred"
+          }
+        ],
+        "ideas_for_us": [
+          "Thaw blocks (from Crystal/Star blocks in Mr. Driller 2 and Star Driller): translucent ice blocks that melt on a visible timer. Veterans time when they drill under them so their own fall becomes the gap they need. Beginners just wait. Give each one its own timer, as G is described doing, and render it as cracking ice so the timing can be read.",
+          "Snowball blocks (from White blocks in G): packed snow that never joins any colour. They make stable pillars that can't crush you, but they kill chains. Give one stage plenty of them so the player chooses between safe shelters and chain setups.",
+          "Make our X blocks worth chaining (from the Undergrounder rule in the original): count X blocks removed by a 4+ X pop, and after a threshold reveal a hidden frozen-friend critter worth a bonus, plus a 1UP every N critters. Veterans will start herding X blocks together, which is a pattern beginners won't see.",
+          "'Present box' gamble (from the '?' blocks in G and Star Driller): a wrapped gift that rolls either a good effect (full air, a one-crush barrier, recolour nearby blocks) or a bad one (half air, a blizzard that hides the next rows). Use it on one stage only so the risk can be learned.",
+          "Pickaxe-count stage (from Dristone mode and Hole of Druaga): one level where air has no clock and only drops per hammer swing, using a number we tune ourselves. It rewards planning a route and rewards chains a lot. Our existing 'chains restore air' twist fits it well.",
+          "Blizzard / lantern stage (from Horror Night House's dim visuals): rows below a radius around the puppy are dimmed, and grabbing a capsule or lantern lights the area for a while. Reading the next few rows becomes a resource veterans spend carefully.",
+          "Chaser stage (from Pressure Driller): an avalanche or snowplough comes down from the top at a set speed. Picking up orange 'warm' capsules lets the puppy bark it back. The choice is detouring for capsules or going straight down.",
+          "Quota floor (from Horror Night and Drindy statues): a level ends when the puppy has rescued N frozen fish or bones, not at 100m. That forces sideways exploration and breaks the habit of only drilling down.",
+          "Per-stage time bonus and life bonus (from the original arcade scoring): a regulation time for each 100m level, with spare seconds turned into points, plus a large bonus per unused life at 500m. That pulls veterans and beginners into visibly different playstyles at no rules cost.",
+          "Structure the five 100m stages as themed 'countries', like Mr. Driller 2's India, America, Egypt and The North, each adding one gimmick on top of the base rules: for example 1 plain, 2 thaw blocks, 3 snowballs, 4 dark blizzard, 5 avalanche chaser. Each new gimmick is then learned in isolation."
+        ]
+      },
+      {
+        "findings": [
+          {
+            "claim": "Mr. Driller 2's Mission Driller is a short set of hand-picked, themed stages, each with a fixed depth and difficulty label: India 500m (Easy), America 1000m (Normal), Egypt 2000m (Hard), The North 2000m (Very Hard). The player picks a stage, and finishing it plays a cutscene. So the series' own 'stages' differ mainly in goal depth and difficulty, with the location as the theme.",
+            "basis": "sourced",
+            "source": "WebSearch summary citing https://en.wikipedia.org/wiki/Mr._Driller_2 and https://digdug.miraheze.org/wiki/Mr._Driller_2"
+          },
+          {
+            "claim": "In Mr. Driller DrillLand's World Drill Tour, both depth and board width grow with the level: Level 1 is 500m on 7 columns, Level 2 is 1000m on 9 columns, Level 3 is 2000m on 15 columns, and a Special level ('Arctic pattern') is endless. Each level has a points target for an 'Excellent' stamp: 400,000 / 700,000 / 1.3 million, and 2 million for Special (about 3,500m).",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/%EB%AF%B8%EC%8A%A4%ED%84%B0%20%EB%93%9C%EB%A6%B4%EB%9F%AC%20%EB%93%9C%EB%A6%B4%EB%9E%9C%EB%93%9C"
+          },
+          {
+            "claim": "DrillLand has five 'attractions', and each one changes or removes a core rule. Hole of Druaga replaces the air timer with HP that goes down 1 per dig (starting at 100), adds keys, doors and monsters, and is described as swapping time pressure for managing a limited number of actions. Drindy Adventure has no air limit and no block chains, and adds rolling boulders and spikes. Horror Night House needs holy water spread over ghost blocks before you can break them, with low-contrast visuals. Star Driller adds '?' blocks with random effects (for example a black hole that clears blocks but is deadly up close), comets, eclipses, and Star Blocks that flash and vanish.",
+            "basis": "sourced",
+            "source": "https://www.siliconera.com/mr-driller-drillland-brings-the-franchises-best-entry-to-the-world/ ; https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land ; namu.wiki page above"
+          },
+          {
+            "claim": "DrillLand's progression loop: all five modes have Levels 1, 2 and 3 of growing length and difficulty, plus a Special level that is usually endless. Clearing a level stamps your 'ride card'. When you have a stamp from every attraction at that tier, you fight a boss (Dr. Manhole's drilling machine), and beating it unlocks the next tier across all attractions. Separate points targets give 'Excellent' stamps for replays.",
+            "basis": "sourced",
+            "source": "https://www.nintendoworldreport.com/review/54192/mr-driller-drill-land-switch-review (search summary) ; https://en.wikipedia.org/wiki/Mr._Driller_Drill_Land"
+          },
+          {
+            "claim": "Each DrillLand attraction sets its own Excellent points target instead of sharing one scale, for example Druaga 150k/250k/400k, Horror 120k/250k/500k and Star Driller 400k/800k/1.7M for Levels 1, 2 and 3. Medal thresholds are tuned to each stage's scoring economy.",
+            "basis": "sourced",
+            "source": "https://en.namu.wiki/w/%EB%AF%B8%EC%8A%A4%ED%84%B0%20%EB%93%9C%EB%A6%B4%EB%9F%AC%20%EB%93%9C%EB%A6%B4%EB%9E%9C%EB%93%9C"
+          },
+          {
+            "claim": "Series modes beyond the main mission: Time Attack uses fixed, hand-made block layouts. There is no air meter, and you collect clocks that subtract their shown seconds from your time. In one game's version, each X block you dig adds 5 seconds. Survival/Endless ('Tokoton') has no goal. Drill Spirits adds Pressure Driller, where you outrun a giant drill and blast its weak spot with energy capsules you collect.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー ; https://en.wikipedia.org/wiki/Mr._Driller_(video_game) ; https://en.wikipedia.org/wiki/Mr._Driller_Drill_Spirits"
+          },
+          {
+            "claim": "Reviewers say Time Attack clocks are placed on purpose so that trying to collect all of them gets you killed. The route becomes a risk/reward puzzle. One critic still found the fixed maze inflexible, saying it is mostly about not drilling into a dead end and having to restart.",
+            "basis": "sourced",
+            "source": "WebSearch summary of https://gamefaqs.gamespot.com/ps/914190-mr-driller/faqs/9386 and https://thegamehoard.com/2026/02/28/mr-driller-ps1/ (pages themselves returned 403 / not read directly)"
+          },
+          {
+            "claim": "Described expert Mr. Driller techniques: deciding whether to chase a capsule or take the fastest way down; freeing a buried capsule by knocking loose the blocks to its left or right, or dropping X blocks onto it, instead of digging the X blocks; drilling upward to dislodge a chunk and trigger a merge-and-pop; drilling up at the right moment to hold a falling column back for a split second; and letting blocks hang one row above you to leave a hole to dig out of later.",
+            "basis": "sourced",
+            "source": "WebSearch summary of https://kimimithegameeatingshemonster.com/2024/07/08/mr-driller-down-to-earth/ , https://www.honestgamers.com/2508/dreamcast/mr-driller/review.html , https://retroarcadememories.wordpress.com/arcade-games-reviews/mr-driller/"
+          },
+          {
+            "claim": "The Drillstone mode in Mr. Driller Great turns air into an action budget: 1% air per dig, whatever the block size, and -20% when crushed. Like Druaga's HP-per-dig, this rewards planning each dig over raw speed.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー"
+          },
+          {
+            "claim": "Later series entries add block types that work as stage modifiers: Crystal blocks vanish on their own after a delay, White blocks never connect and must be drilled directly, and Iron blocks cannot be destroyed. Board width also varies (7 columns for beginner/portable, 9 standard, 15 advanced).",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/ミスタードリラー"
+          },
+          {
+            "claim": "Nazo Puyo is a 'tsume-shogi'-style puzzle mode: a preset board plus a given piece sequence, with goals like 'make an N-chain', 'clear X puyos at once' or 'clear all of a colour'. It teaches chain-building one skill at a time and became its own spin-off series.",
+            "basis": "sourced",
+            "source": "https://ja.wikipedia.org/wiki/なぞぷよ"
+          },
+          {
+            "claim": "Puyo Puyo 2's offsetting rule, plus a custom rule where short chains score nothing, made matches longer and shifted strategy toward building big chains. The players' rule changed how experts play.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Puyo_Puyo_Tsu"
+          },
+          {
+            "claim": "Tetris standardised short fixed-goal modes: Sprint (40 lines as fast as possible) and Ultra (score attack in 2 or 3 minutes). Guideline scoring pays extra for T-spins and Back-to-Back Tetris/T-spin streaks, which is a big part of why expert play looks different.",
+            "basis": "sourced",
+            "source": "https://tetris.fandom.com/wiki/Tetris_Guideline (search summary) ; https://dinogame.gg/blog/tetris-speedrun-categories/"
+          },
+          {
+            "claim": "Tetris: The Grand Master gives automatic grades from 9 up to GM. GM also needs time targets to be met during play, so both how well and how fast you play count. Speed rises to instant 20G gravity by level 999. Later versions add an invisible-blocks credits roll after M rank.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Tetris:_The_Grand_Master"
+          },
+          {
+            "claim": "Spelunky generates levels procedurally but under constraints: a 4x4 grid of 16 rooms, with a guaranteed solution path made by random left/right/down steps and room templates typed by their exits (types 0-3). The game has four areas of rising difficulty, and the Tunnel Man unlocks shortcuts.",
+            "basis": "sourced",
+            "source": "https://tinysubversions.com/spelunkyGen/ ; https://en.wikipedia.org/wiki/Spelunky"
+          },
+          {
+            "claim": "Meteos' Star Trip uses branching routes through planets, and each planet has its own gravity that changes how blocks launch. One core mechanic varied per stage gives each stage its own strategy.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Meteos"
+          },
+          {
+            "claim": "Dig Dug rewards play beyond the basic goal: bonus points for crushing several enemies with one rock, a bonus vegetable after any two rocks are dropped (worth more in later rounds), and a last enemy that tries to flee. Later rounds add more and faster enemies across 255 levels.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Dig_Dug"
+          },
+          {
+            "claim": "Boulder Dash caves each need a set number of diamonds within a time limit. Exact counts per cave were not in the source I read.",
+            "basis": "sourced",
+            "source": "https://en.wikipedia.org/wiki/Boulder_Dash_(video_game)"
+          },
+          {
+            "claim": "Pattern across the series: Namco made stages different by (a) depth/length, (b) board width, (c) swapping the resource that limits you (air over time, HP per dig, a clock, or no limit), and (d) one new block type or hazard per stage. They did not hand-author whole layouts, except in Time Attack. This is my reading of the mode descriptions above.",
+            "basis": "inferred",
+            "source": "synthesis of the Mr. Driller 2, DrillLand and Mr. Driller Great sources above"
+          },
+          {
+            "claim": "Expert-vs-beginner separation in these games comes from optional, risky scoring that sits on top of a simple goal: T-spins and Back-to-Back over plain clears, Excellent stamps over plain clears, collecting clocks over the safe route, rock multi-kills in Dig Dug. Beginners finish the stage. Experts take the risk for the extra score.",
+            "basis": "inferred",
+            "source": "synthesis of Tetris Guideline, DrillLand stamps, Time Attack clocks, Dig Dug"
+          }
+        ],
+        "ideas_for_us": [
+          "Stage map like DrillLand: 5 themed ice stages (for example Frosty Meadow 300m/7 cols, Glacier 500m/9 cols, Crystal Caverns, Blizzard Peak, Frozen Core 1000m), each with ONE signature modifier on top of the current core rules. Clearing a stage gives a pawprint stamp, and the full set unlocks a boss stage (for example a giant ice golem) and then 'Hard' versions of every stage.",
+          "Give each stage its own limiting resource, the way DrillLand does: one stage uses hammer stamina (1 per swing, no air timer) for planning-heavy play; one has no air but a rolling snowball hazard (Drindy-style); one uses melt-away crystal ice (Crystal blocks) that rewards speed. Each change asks for a different strategy pattern.",
+          "Medals tuned per stage, like the separate Excellent targets in each attraction: Bronze = reach the bottom, Silver = a score target set from playtest data, Gold = a score or time target plus a style condition (for example 'one 3+ chain' or 'never dropped below 30% air'). Never share one score scale across stages, because each stage scores differently.",
+          "A 'Nazo Ice' puzzle set: hand-authored small boards with goals like 'pop a 3-chain', 'free the air capsule without touching X blocks' or 'reach the bottom in 12 swings'. Each one teaches a named technique (side-knock capsule extraction, upward-dig stall, letting blocks hang over you) before stages test it under air pressure.",
+          "Constrained procedural generation in the style of Spelunky: generate each stage from seeded templates in 10-20m bands, guaranteeing a reachable route and a capsule within the air range. Then insert hand-authored 'setpiece' bands, such as a chain-bait colour pyramid or an X-block wall with a hidden capsule, at fixed depths so each stage has recognisable landmarks experts can learn to route.",
+          "A Time Attack stage with a fixed layout and clocks placed so that collecting them all is risky. Show a ghost of your best run and a per-100m split. Fixed seeds let veterans learn routes, which makes the stage replayable like Sprint.",
+          "Make chain play the expert path in the scoring and medals, like Tetris' T-spin/Back-to-Back: for example a streak bonus for back-to-back chain pops within N seconds, and Gold medals that need chains. Beginners can still clear by drilling straight down.",
+          "Stage-local pacing: start each stage with a calm teaching band (fewer colours, slow wobble), push to a peak just before each aqua CLEAR row, then ease off right after it. This builds tension and release within a 2-4 minute session. The current per-level preset colour counts [4,3,2,4,3] already give a curve per stage that can be tuned.",
+          "Endless 'Special' stage after the boss, with a seeded daily variant and a leaderboard, to give veterans a 'one more try' goal after all stamps are collected."
+        ]
+      }
+    ],
+    "design": {
+      "pillars": [
+        "Each stage adds one rule. Stage n brings in exactly one mechanic on top of the base rules, so the player can find its pattern without other variables in the way. This follows how Namco varied stages: depth, board width, the resource that limits you, and one new block or hazard (MD2 Mission, DrillLand attractions).",
+        "Fixed courses make routes learnable. Every stage plays a fixed 'course' seed by default, with a Random toggle, so veterans can learn, share and optimise routes. That is where T-spin-like discoveries come from, as in Time Attack's fixed layouts and Tetris Sprint. Random play stays available for variety.",
+        "Beginners clear, veterans score. Bronze only needs a clear. Silver and Gold need the optional risky play each mechanic rewards: chains, herding X blocks, timed thaws, the fewest swings. This mirrors Excellent stamps in DrillLand, T-spin/Back-to-Back in Tetris, and Time Attack clocks.",
+        "Each stage puts a different resource under pressure: air over time (stages 1-4), air per swing (Igloo), a chaser (Avalanche), and irregular capsule supply (Aurora). This is the series' own pattern of swapping the limiting resource.",
+        "Everything is pure logic. Every mechanic is data on StageDef plus deterministic code in src/game.ts driven by a seeded RNG stored in Game. Each one gets Vitest tests built from small hand-made boards. Renderers only read state and events.",
+        "Theme: a Yorkshire-terrier puppy with a hammer travels an ice world. Each stage is a place, and its scenery changes at each aqua CLEAR row (MD1 changed backgrounds with depth)."
+      ],
+      "stages": [
+        {
+          "id": "snowy-hill",
+          "name_ko": "눈송이 언덕",
+          "theme": "Sunny snowfield with snowmen, the puppy's backyard. Pastel storybook colours.",
+          "goal": "Reach 300m (drill the bottom of level 3).",
+          "length_m": 300,
+          "levels": "7 columns. L1: 2 colours, X 0.03, capsule x1.3, drain 1.0%/s, wobble 1.2s, fall 6.0. L2: 3 colours, X 0.05, capsule x1.2, drain 1.15, wobble 1.1, fall 6.667. L3: 3 colours, X 0.08, capsule x1.0, drain 1.32, wobble 1.0, fall 6.667. capsuleGuard 0 throughout.",
+          "new_mechanic": "None. This is the base rules taught one at a time: chunks clear together, wobble then fall, sticking, 4+ pops, capsules, X blocks (rare), the CLEAR row. A contextual hint bubble appears the first time each thing happens (pure logic emits the events already).",
+          "strategy_it_creates": "Learning to read wobble: step aside when a chunk shakes. It also shows the existing chain-restores-air twist early. A 7-column board makes accidental 4+ pops common, so beginners see a chain without trying.",
+          "reference": "Sourced: MD2 Mission India 500m 'Easy'. DrillLand World Drill Tour Level 1 is 7 columns. 7 columns is the series' beginner/handheld width (ja.wikipedia series article). The 300m length is our shortening.",
+          "unlock": "Open from the start.",
+          "medals": "Bronze: clear. Silver: clear with no life lost. Gold: clear with no life lost and at least one chain of 2 or more (shows chains exist)."
+        },
+        {
+          "id": "frozen-lake",
+          "name_ko": "얼어붙은 호수",
+          "theme": "Frozen lake with fish trapped in the ice. Frozen friends (seal pup, penguin chick, arctic fox) sleep in the ice. Scenery goes lake surface, fish, reeds, lake bed, sunken boat.",
+          "goal": "Reach 500m.",
+          "length_m": 500,
+          "levels": "9 columns. Exactly the current DEFAULT_STAGE: colours [4,3,2,4,3], X [0.08,0.11,0.14,0.17,0.2], guard [0,0.25,0.5,0.75,0.9], drain [1.32,1.62,1.98,2.16,2.16], wobble [1.0,0.9,0.8,0.7,0.6], fall [6.667,8,9.333,10.667,12], capsule 84/1000m. Regulation time 75s per 100m, with a time bonus (universal from this stage on).",
+          "new_mechanic": "Frozen Friends, based on the original's Undergrounder rule. Every 12 X blocks removed by a 4+ X-block pop (not by drilling) thaws a frozen friend into a nearby coloured block below the puppy. Collecting it gives 765 x n points, and every 3rd friend gives a 1UP. Also introduces the regulation time bonus.",
+          "strategy_it_creates": "Herding X blocks. Veterans stop drilling X blocks (each break costs 20% air) and instead knock out the coloured blocks around them so X blocks fall together and pop as 4+. Beginners drill or avoid X blocks, so the two play visibly differently, and veterans end with friends on screen. The time bonus adds a second axis: speed against herding.",
+          "reference": "Sourced: Mr. Driller PS1 manual (popping X-block groups banks hidden points, and after 30 an Undergrounder appears worth 765). The fan-wiki snippet about an extra life for 20 Undergrounders is only a snippet, so our 3-friends-per-1UP is a tuned adaptation. The time bonus is the manual's 'regulation time' bonus. The stage itself is the current game, the MD1 500m Challenge.",
+          "unlock": "Clear snowy-hill (Bronze).",
+          "medals": "Bronze: clear. Silver: clear plus 2 or more friends. Gold: clear plus 4 or more friends and total time under 6:00. Thresholds to be checked with the sim bot."
+        },
+        {
+          "id": "thaw-cave",
+          "name_ko": "녹는 얼음 동굴",
+          "theme": "Ice cave lit by blue light coming through thin ice. Icicles, glowing crystals, dripping water.",
+          "goal": "Reach 500m.",
+          "length_m": 500,
+          "levels": "9 columns. Colours [3,3,4,3,4]. X [0.06,0.08,0.1,0.12,0.14]. thawChance [0.06,0.10,0.14,0.18,0.22] per cell. Thaw melt time [3.0,2.6,2.2,1.9,1.6]s. Drain [1.32,1.5,1.8,2.0,2.1]. Wobble and fall as in frozen-lake. Capsules x1.0. Regulation 80s/100m.",
+          "new_mechanic": "Thaw ice (얇은 얼음), from Crystal blocks in MD2 and Star Blocks in Star Driller. A translucent block that never joins anything. Its melt timer only runs while at least one of its four neighbours is empty, and it vanishes when the timer ends, so anything resting on it wobbles and falls. One hammer hit breaks it at once for 10 points. Cracks show the timer.",
+          "strategy_it_creates": "Timed drops. Veterans expose a thaw block (dig the cell next to it) and walk away, so the melt becomes a delayed trigger that drops a stack onto a matching colour for a chain. This gives free pops with no swing. They also read which thaws under the puppy will drop it, and use the drop as a shortcut. Beginners just smash thaws, which is safe but forgoes the chains.",
+          "reference": "Sourced: MD2 added Crystal Blocks that 'disappear by themselves after a while', and G is described as giving each one its own timer. In Star Driller, Star Blocks vanish and drop the blocks above onto the player. 'Ice Age' is also one of MD1's named Time Attack courses. Starting the timer only on exposure is our choice, made so the timing can be read.",
+          "unlock": "Clear frozen-lake (Bronze).",
+          "medals": "Bronze: clear. Silver: clear plus 3 or more chains (step 2+) that a thaw melt set off. Gold: clear plus 8 or more melt-triggered chains and no life lost."
+        },
+        {
+          "id": "snow-forest",
+          "name_ko": "눈 쌓인 전나무 숲",
+          "theme": "Pine forest buried in packed snow, owls, sleeping bears. Snow blocks are fluffy white cubes with pawprints.",
+          "goal": "Reach 500m.",
+          "length_m": 500,
+          "levels": "9 columns. Colours [4,4,3,4,4] (more colours make chains harder, so snow pillars matter). X [0.06,0.08,0.1,0.12,0.14]. snowChance [0.10,0.14,0.18,0.22,0.26]. Drain [1.32,1.62,1.8,2.0,2.16]. Wobble [1.0,0.9,0.8,0.7,0.6]. Fall as in frozen-lake. Capsules x1.0. Regulation 80s/100m.",
+          "new_mechanic": "Packed snow (눈뭉치), from White Blocks in G. Never joins any block, including other snow. Supports what rests on it. Falls on its own when unsupported, after the usual wobble. Never pops, never takes part in a chain, never counts toward a 4+ group. One hit to break, 10 points.",
+          "strategy_it_creates": "Shelter against setup. A snow cell holds up a coloured overhang, so a veteran can keep a snow 'pillar' as a safe pocket next to a wobbling stack, then knock the pillar out at the right moment to drop the stack where they want it (a manual chain trigger). Snow also splits colour groups, so building chains means drilling snow out of the way, and that decision is visible. Beginners use snow as safe ground and drill straight down.",
+          "reference": "Sourced: Mr. Driller G White Blocks 'never stick to any other block', so they must be drilled directly. Research noted white blocks can serve as safe pillars but block chain setups.",
+          "unlock": "Clear thaw-cave (Bronze).",
+          "medals": "Bronze: clear. Silver: clear plus a largest single pop of 8 or more cells. Gold: clear plus 3 or more chains of step 3+."
+        },
+        {
+          "id": "hammer-igloo",
+          "name_ko": "망치 이글루",
+          "theme": "Inside a huge igloo village carved into the glacier, with an underground ice-sculptors' town. The puppy's hammer swings are counted on a 'stamina bone' gauge.",
+          "goal": "Reach 300m.",
+          "length_m": 300,
+          "levels": "9 columns. Colours [3,4,3]. X [0.08,0.12,0.16]. Air mode 'swing': no time drain. Each hammer swing that hits a cell (including X chips) costs 1.0% (L1), 1.1% (L2), 1.2% (L3). Breaking an X block costs no extra (the 5 swings are the cost). Capsule +23% as usual, capsule rate x0.5. Being crushed costs 20% air instead of a life (lives are kept for suffocation). Chains still restore +3n%. Wobble [1.1,1.0,0.9], fall as in L1-3 of frozen-lake. No time bonus. Instead there is a swing bonus: (target swings - swings used) x 200 at the goal.",
+          "new_mechanic": "Air per swing, from Dristone / Mr. Driller A / Hole of Druaga. Air only drops when the hammer hits something, so time is free and every swing counts. Crushing becomes an air cost (from Ace's -20%).",
+          "strategy_it_creates": "Fewest swings, the most direct 'pattern discovery' mode. Since time is free, veterans stop and plan. One swing on the right chunk drops several stacks into a pop or chain, chains refill air so they are worth more than capsules, and walking or falling costs nothing. A planned crush can even be worth taking (-20%) when it saves 25 swings. Beginners drill blocks one at a time and run dry. It also feeds back into the other stages: veterans carry the 'let gravity dig' habit into them.",
+          "reference": "Sourced: Dristone modes (G, Drill Spirits JP/EU, Drill Till You Drop) use about 1% air per dig instead of over time. Mr. Driller A uses 1% per block destroyed, and being squashed costs 20%. Hole of Druaga swaps time pressure for a limited number of actions (HP per dig).",
+          "unlock": "Clear snow-forest (Bronze).",
+          "medals": "Bronze: clear. Silver: clear in 180 swings or fewer. Gold: clear in 130 swings or fewer. Calibrate both with the sim bot."
+        },
+        {
+          "id": "avalanche-pass",
+          "name_ko": "눈사태 고개",
+          "theme": "Steep mountain pass. A roaring wall of snow (with a grumpy snow-yeti face) chases the puppy down from above. Orange 'warm cocoa' capsules replace air capsules.",
+          "goal": "Reach 500m before the avalanche catches you.",
+          "length_m": 500,
+          "levels": "9 columns. Colours [4,3,3,4,3]. X [0.06,0.09,0.12,0.15,0.18]. Air drain halved: [0.7,0.8,0.9,1.0,1.1]. Avalanche speed [1.6,1.9,2.2,2.5,2.8] rows/s. It starts 12 rows above the surface. Capsules (cocoa) +15% air and push the avalanche back 10 rows. Wobble [0.9,0.8,0.7,0.6,0.6]. Fall as in frozen-lake. Regulation 55s/100m.",
+          "new_mechanic": "Avalanche chaser, from Pressure Driller (DS). A snow line comes down at a fixed speed per level. Every cell at or above it is erased. If it reaches the puppy's row, the puppy loses a life, and the line resets to 8 rows above the respawn. Cocoa capsules push it back. This is an adaptation (original idea 1 of 2): a pushback capsule instead of Pressure's weak-spot cannon.",
+          "strategy_it_creates": "Speed against detours, with a twist. The avalanche wipes everything above it, so hanging overhangs behind you disappear: the closer it is, the safer the space overhead, but the less margin you have. Veterans 'surf' 4-6 rows ahead of it, drill straight down, and detour only for cocoa that buys 10 rows. Beginners hold a large buffer and get crushed by overhangs, or detour and get caught. Air matters less, so the decisions are about route speed.",
+          "reference": "Sourced: Drill Spirits Pressure Driller, where a giant Destroyer Drill chases you through an endless stage and you collect orange energy capsules to blast it. The avalanche, its row-erasing, and pushback are our adaptation.",
+          "unlock": "Clear hammer-igloo (Bronze).",
+          "medals": "Bronze: clear. Silver: clear with no life lost to the avalanche. Gold: clear in under 4:00 with no life lost."
+        },
+        {
+          "id": "aurora-north",
+          "name_ko": "오로라 북극",
+          "theme": "Polar night under aurora curtains. Scenery goes pack ice, a mammoth in ice, an ice palace, the aurora core. This is the 'North' of the puppy's trip.",
+          "goal": "Reach 1000m.",
+          "length_m": 1000,
+          "levels": "11 columns, 10 levels. Colours [4,3,4,3,4,4,3,4,4,4]. X ramps 0.08 to 0.22. L1-2 base. L3-4 thaw (0.12, melt 2.2/1.9). L5-6 snow (0.18/0.22). L7 thaw+snow. L8-10 all of them plus Frozen Friends active throughout. Irregular capsule supply per level (multiplier on base): [1.0,0.2,2.5,0.3,0.1,3.0,0.5,0.15,1.5,0.1]. Drain [1.32 to 2.3]. Wobble [1.0 down to 0.55]. Fall [6.667 to 12]. Regulation 80s/100m. No avalanche or swing mode: each stage has one air economy.",
+          "new_mechanic": "Mastery stage, nothing new in the rules: it combines thaw, snow and friends on a wider 11-column board. Its one twist is data only: deliberately irregular capsule supply, with some levels nearly dry and others flooded.",
+          "strategy_it_creates": "Using skills across levels. On flooded levels veterans spend air on score (herding X blocks for friends, chains). On dry levels they rely only on chain-air and melt-triggered chains. 11 columns give room for long sideways setups. Beginners who learned one trick per stage stall at the dry levels.",
+          "reference": "Sourced: MD2's secret 'The North' 2000m 'Very Hard', unlocked by clearing India, America and Egypt, with irregular oxygen (only one capsule on some levels). The MD2 arcade 'experts' course was wider (15 columns). 11 columns is our middle ground for a 9-column renderer.",
+          "unlock": "Clear all of stages 1-6 (Bronze each), like MD2's North.",
+          "medals": "Bronze: clear. Silver: clear plus 5 or more friends. Gold: clear with no life lost, or clear plus a score at or above a sim-calibrated target."
+        },
+        {
+          "id": "endless-glacier",
+          "name_ko": "끝없는 빙하",
+          "theme": "Bottomless glacier crevasse. The scenery cycles through every earlier stage's theme every 100m, then gets darker.",
+          "goal": "Survival: dig as deep as you can. There is no goal row.",
+          "length_m": 0,
+          "levels": "9 columns. Levels are generated on the fly. Level n uses colours cycling [4,3,2,4,3]. X = min(0.25, 0.08+0.015n). Drain = min(2.6, 1.32+0.12n). Wobble = max(0.45, 1.0-0.05n). Fall = min(14, 6.667+0.6n). Capsule base rate. From level 3, each level takes thaw or snow in turn (thaw on odd levels, snow on even), at 0.12. Friends active. 1 life, no extends.",
+          "new_mechanic": "Endless generation: levels are added below as the puppy goes down. No new block rule.",
+          "strategy_it_creates": "Bringing it all together, with high scores and depth records to chase. Combined with the daily seed, it gives veterans a 'one more try' target.",
+          "reference": "Sourced: MD1 console Survival (endless, one life, Hard from 1000m and Expert from 2000m), and the endless 'Special' tier in DrillLand. G's endless Space stage.",
+          "unlock": "Clear frozen-lake (Bronze), so veterans reach it early.",
+          "medals": "Bronze: 500m. Silver: 1000m. Gold: 2000m (the series' Expert depth)."
+        }
+      ],
+      "new_mechanics_spec": [
+        {
+          "name": "Stage-driven board (width, seed, stats, RNG in state)",
+          "rules": "Board width comes from stage.cols (7/9/11). The course seed is stage.seed unless Random is on. The run records stats for medals. This is groundwork, not a gameplay rule.",
+          "logic_changes": "createGame uses `cols = stage.cols` (DEFAULT_STAGE.cols = 9, so behaviour is unchanged). Move row generation into `generateRows(g, fromLevel, toLevel)`, which uses `g.rng` (a uint32 mulberry32 state stored on Game, advanced by a `rand(g)` helper) so later spawns (friends, endless) stay deterministic. Add `g.stats = { swings, livesLost, maxChain, maxPop, meltChains, friends, minAir, capsules, levelStart }`, updated in drill/popChunk/loseLife/update. Add an exported pure `runResult(g): RunResult`. Generalise the 'capsules stand alone' check in computeChunks to `SOLO.has(color)`, where SOLO = {CAPSULE, THAW, SNOW, FRIEND}. Make the mole start at `Math.floor(cols/2)`, which it already does.",
+          "tests": "DEFAULT_STAGE run with seed s gives exactly the same cells as before (snapshot the first 30 rows). A 7-column stage has g.cols === 7 and no cell at x >= 7. The same seed and stage give identical boards, and different seeds differ. Every existing test still passes. stats.swings goes up once per drill that hits something, and not on cooldown-blocked calls. livesLost/minAir track a suffocation."
+        },
+        {
+          "name": "Regulation time bonus",
+          "rules": "Each 100m level has a regulation time T. Drilling that level's CLEAR row at level time t pays max(0, ceil(T - t)) x 100 points. The level clock starts at the previous CLEAR (or the start).",
+          "logic_changes": "LevelDef.regulationTime?: number. In clearLevel: compute `t = g.time - g.stats.levelStart`, add the bonus through addScore, set levelStart = g.time, and extend the event to `{type:'levelclear', y, bonus, timeBonus}`. Stages without regulationTime pay nothing.",
+          "tests": "A board with a CLEAR row one cell under the mole. Set g.time so t=10 with T=75, drill: score goes up by 1000*level + 6500, and the event carries timeBonus 6500. With t > T, timeBonus is 0. A stage without regulationTime gives timeBonus 0."
+        },
+        {
+          "name": "Frozen Friends (X herding bonus)",
+          "rules": "Count X cells removed by an X-chunk pop (4+), but not X blocks broken by drilling. Each time the counter passes stage.rules.friends.xPerFriend (12), choose with g.rng a coloured cell 3 to 15 rows below the mole and turn it into FRIEND. FRIEND is solo and supports like a block, and it can fall. Taking it (walking or drilling into it, or having it fall onto the puppy) removes it, pays points x n (765 x nth friend), and every 3rd friend gives a 1UP.",
+          "logic_changes": "New cell constant FRIEND = -6. In popChunk, if the colour is XBLOCK, `g.xPopped += members.length`, and while g.xPopped >= xPerFriend: subtract it and call spawnFriend(g). spawnFriend scans the candidate rows in a rand-shuffled order and picks the first cell with color >= 0. If there is none, the friend is held in g.pendingFriends and retried at the next level change. In move/drill/fall-onto-mole, handle FRIEND the way CAPSULE is handled (a takeFriend helper). New events `{type:'friend-spawn',x,y}` and `{type:'friend',x,y,points,count}`. The 1UP goes through the existing extend event.",
+          "tests": "Pop a hand-built 4-cell X chunk with xPerFriend=4: one FRIEND appears 3 to 15 rows below, and it is the same cell for the same seed. Breaking 4 X blocks by drilling spawns none. Taking a friend pays 765, the second pays 1530, and the third also gives a life. FRIEND never merges with an adjacent FRIEND. With no coloured cells in range, the friend is deferred, not lost."
+        },
+        {
+          "name": "Thaw ice",
+          "rules": "THAW is a solo, one-hit block. Its `melt` timer runs only while any 4-neighbour is empty (out of bounds counts as filled, and the mole's cell counts as empty). When melt >= the level's thawTime it vanishes. Pieces above then wobble and fall normally. If that fall produces a pop, it counts as a melt chain: it is chain step 1 under normal rules, and is tracked in stats.meltChains.",
+          "logic_changes": "THAW = -7. Cell gets `melt: number` (0 in makeCell). Generation: after choosing a colour, `if (r2 < def.thawChance) color = THAW` (no thaw in the first 3m or on CLEAR rows). In tick, before the chunk scan: for each THAW cell that is exposed, `melt += TICK`. If it reaches thawTime, null it, mark the cells stacked above with a `fromMelt` flag (reuse the chain-tag walk: set cell.meltTag = true), and emit `{type:'melt',x,y}`. In the pop branch, if any member has meltTag, increment stats.meltChains. Clear meltTag when the chunk settles without popping. Drilling a THAW cell: 10 points, a drill event. THAW in SOLO.",
+          "tests": "A THAW fully enclosed by blocks never melts over 10s of ticks. Empty one neighbour: it melts at thawTime ± 1 tick and emits melt. A red stack on top then wobbles and falls. Arrange the fall to land on 3 reds so it pops: meltChains = 1. A drilled THAW disappears instantly for 10 points. Two adjacent THAWs remain separate chunks. A THAW does not pop when 4 or more land together."
+        },
+        {
+          "name": "Packed snow",
+          "rules": "SNOW is solo: it never joins anything, including other snow. It falls by itself when unsupported, after the usual wobble. It never pops and never counts toward 4+. One hit to break. A coloured chunk resting on snow is supported.",
+          "logic_changes": "SNOW = -5. Generation: `if (r2 < def.snowChance) color = SNOW` (not on CLEAR rows or in the first 3m). Add SNOW to SOLO in computeChunks. The pop check in tick already needs `color >= 0 || XBLOCK`, so SNOW never pops. Drilling SNOW removes only that cell (the members list is 1 because it is solo): 10 points, a drill event. Renderer: a white block with no outline merging.",
+          "tests": "A vertical column of 4 SNOW cells is 4 chunks. Remove the support under the column: each cell wobbles and falls, and none pop on landing. A red 2x2 sitting on one SNOW cell does not fall. Drilling that SNOW makes the 2x2 wobble. 4 SNOW cells landing together give no pop event. Drilling SNOW removes exactly one cell."
+        },
+        {
+          "name": "Air per swing (Igloo economy)",
+          "rules": "With stage.air.kind === 'swing', there is no time drain. Every drill() that hits a cell, including an X chip, costs the level's perSwing air. Breaking an X block costs stage.air.xBreakAir (0) instead of AIR_XBLOCK. A crush costs crushAir (20) of air and no life. Air reaching 0 still costs a life. Capsules and chain-air work as usual. At the goal, a swing bonus = max(0, targetSwings - swings) x 200.",
+          "logic_changes": "StageDef.air: `{kind:'time'} | {kind:'swing', perSwing:number[], xBreakAir:number, crushAir:number, targetSwings:number}`. In update, only call drainAir over time when kind==='time'. In drill, once lastDrill is set, call `if swing: drainAir(g, perSwing[level-1])` and use xBreakAir. In crushMole, when kind is swing and not invulnerable, call drainAir(crushAir), set invuln = INVULN_TIME and clear the 3 cells above (factor out the existing loseLife helper as clearAbove). In the win branch add the swing bonus. The won event becomes `{type:'won', bonus, swingBonus?}`.",
+          "tests": "Swing stage: 10s of update without drilling leaves air at 100. 5 drills cost 5 x perSwing. 5 X chips plus the break cost exactly 5 x perSwing. Drill calls rejected by cooldown cost nothing. A chunk falling on the mole gives air -20 and lives unchanged. With air at 0.5 and perSwing 1, a drill suffocates (lives -1). A time-mode stage behaves as before (regression)."
+        },
+        {
+          "name": "Avalanche chaser",
+          "rules": "g.avalanche is a fractional row index that moves down by speed[level] rows/s while playing. Every cell with y <= floor(avalanche) is erased (it has buried the area behind the puppy). If floor(avalanche) >= mole.y, the puppy loses a life and avalanche = mole.y - resetGap (8). Taking a capsule moves it back by capsulePush (10), but never above its start of -start (it starts start=12 rows above the surface). A CLEAR row the puppy has already drilled has no special effect.",
+          "logic_changes": "StageDef.rules.avalanche?: {start, resetGap, capsulePush}. LevelDef.avalancheSpeed?: number. Game.avalanche: number | null (null when the stage has none). In update, after the time drain: `avalanche += speed*dt`. Then in tick, wipe cells above it row by row (track g.avalancheWiped so each row is wiped once, and emit `{type:'avalanche', row}`), and check the mole. On a catch, emit `{type:'buried'}`, call loseLife, then reset. takeCapsule pushes it back when the rule is present. Capsule air comes from stage.capsuleAir ?? AIR_CAPSULE (15 here).",
+          "tests": "Speed 2 rows/s, start 12 above the mole, mole idle with air drain 0: after about 6.5s+ the mole is caught (buried, lives -1), and avalanche = mole.y - 8. Cells above the line are null and cells below are untouched. A hanging red chunk above the line is erased, not dropped. A capsule moves avalanche back by 10, clamped at the start. A stage without the rule has g.avalanche === null and no events."
+        },
+        {
+          "name": "Irregular capsule supply (Aurora)",
+          "rules": "Each level's capsule rate is stage.capsuleChance x level.capsuleMul. This is data only.",
+          "logic_changes": "LevelDef.capsuleMul?: number (default 1), used in the generation draw `r < stage.capsuleChance * (def.capsuleMul ?? 1)`.",
+          "tests": "Over 50 seeds on a 2-level stage with muls [0.1, 3]: the mean capsule count in level 2 is above 10x level 1. With all muls at 1, the board is the same as before (snapshot)."
+        },
+        {
+          "name": "Endless generation",
+          "rules": "stage.endless: when the mole is within 60 rows of the bottom, generate the next 100m level (levelFn(n) gives its LevelDef) and append it. Deep rows above are not trimmed in v1. There is no won state. One life.",
+          "logic_changes": "StageDef.endless?: (n:number) => LevelDef, where levels[] holds the first ones and the rest come from the function. g.levels: LevelDef[] (resolved and growing) replaces direct `stage.levels` reads in levelAt and levelIn calls (use g.levels.length). In tick, when `g.rows - g.mole.y < 60`, call generateRows(g, L+1, L+1), which extends the cells array by cols*100 and adds rows. Skip the win check when endless. START_LIVES comes from stage.lives ?? 3.",
+          "tests": "Start with 1 level. Move the mole (set y) to row rows-50 and tick: rows grows by 100, level 2 has a CLEAR row at 200m, and the new rows come from the seeded RNG (same seed gives the same rows). Reaching the bottom never sets won. The level-up event fires at 101m."
+        }
+      ],
+      "data_model": "// game.ts holds only rules and data. The catalogue, medals and unlocks go in a new src/stages.ts (pure, tested), and localStorage progress in src/progress.ts (pure core plus a thin storage wrapper).\n\n```ts\n// game.ts\nexport const THAW = -7, SNOW = -5, FRIEND = -6;  // with XBLOCK -1, CAPSULE -2, CLEAR -3\nexport interface LevelDef {\n  colors: number; xChance: number; capsuleGuard: number;\n  airDrain: number; wobble: number; fallSpeed: number;\n  capsuleMul?: number;        // Aurora: irregular supply\n  regulationTime?: number;    // s per 100m -> time bonus\n  thawChance?: number; thawTime?: number;\n  snowChance?: number;\n  avalancheSpeed?: number;    // rows/s\n  perSwing?: number;          // swing-mode air per hit\n}\nexport type AirRule =\n  | { kind: 'time' }\n  | { kind: 'swing'; xBreakAir: number; crushAir: number; targetSwings: number };\nexport interface StageDef {\n  id: string;\n  cols: number;                 // 7 | 9 | 11\n  levels: LevelDef[];           // fixed part; depth = levels.length*100 unless endless\n  endless?: (n: number) => LevelDef;  // level n >= levels.length+1\n  capsuleChance: number;        // per cell, before capsuleMul\n  capsuleAir?: number;          // default AIR_CAPSULE (23)\n  lives?: number;               // default START_LIVES; endless = 1\n  extendScores?: number[];      // default EXTEND_SCORES; [] in endless\n  seed?: number;                // fixed course seed (UI may override with Random)\n  air: AirRule;\n  rules: {\n    friends?: { xPerFriend: number; points: number; lifeEvery: number };\n    avalanche?: { start: number; resetGap: number; capsulePush: number };\n  };\n}\nexport interface RunStats { swings: number; livesLost: number; maxChain: number; maxPop: number;\n  meltChains: number; friends: number; minAir: number; capsules: number; levelStart: number; }\nexport interface RunResult { stageId: string; won: boolean; depth: number; score: number;\n  time: number; stats: RunStats; seeded: boolean; }\nexport function createGame(seed = stage.seed ?? Date.now(), stage = DEFAULT_STAGE): Game\nexport function runResult(g: Game, seeded: boolean): RunResult\n```\nHow createGame uses it: cols = stage.cols. g.levels = [...stage.levels]. rows = SKY_ROWS + g.levels.length*100. g.rng = seed. generateRows(g, 1, L) draws per cell in this order: capsule (capsuleChance*capsuleMul), then X (odd rows), then thaw, then snow, then neighbour-colour bias, then random colour. CLEAR rows at each 100m. Capsule guard pass. lives = stage.lives ?? 3. air = 100. avalanche = rules.avalanche ? SKY_ROWS-1-start : null. xPopped = 0. stats zeroed. During play: update() branches on air.kind, and tick() runs the thaw timers, avalanche wipe/catch and endless append, each only when its data is present. A DEFAULT_STAGE with cols 9, air time and rules {} must reproduce today's game exactly.\n\n```ts\n// stages.ts\nexport type MedalTier = 0 | 1 | 2 | 3;          // none/bronze/silver/gold\nexport interface MedalRule { tier: 1|2|3; text_ko: string; test: (r: RunResult) => boolean; }\nexport type Unlock = { kind: 'open' } | { kind: 'cleared'; ids: string[] };\nexport interface StageMeta { def: StageDef; nameKo: string; blurbKo: string; mechanicKo: string;\n  theme: string; unlock: Unlock; medals: MedalRule[]; scenery: string[] /* per-100m backdrop ids */ }\nexport const STAGES: StageMeta[];               // ordered 1..8\nexport function medalFor(meta: StageMeta, r: RunResult): MedalTier;  // highest tier whose test passes; each tier also requires the lower ones\nexport function isUnlocked(meta: StageMeta, p: Progress): boolean;\n// progress.ts\nexport interface StageRecord { medal: MedalTier; cleared: boolean; bestScore: number;\n  bestDepth: number; bestTime: number | null; bestSwings?: number; plays: number; }\nexport interface Progress { v: 1; stages: Record<string, StageRecord>; lastStage?: string; random?: boolean; }\nexport function recordRun(p: Progress, r: RunResult): { progress: Progress; medal: MedalTier;\n  newBest: string[]; unlocked: string[] };   // pure: returns a new Progress\nexport function loadProgress(): Progress;    // try/catch, 'dig-down:progress:v1'; migrates 'dig-down:best' into frozen-lake\nexport function saveProgress(p: Progress): void;\n```\nRandom-seed runs earn medals and unlocks. Seeded best scores and times are kept apart (`bestScore` only counts seeded runs) so route records stay comparable. This is an open question.",
+      "ui_flow": "1. Title (existing) leads to Stage Select (new overlay in main3d/main). A storybook trail map of the puppy's trip with 8 nodes in order. Each node shows the stage icon, the Korean name, length and width (for example '300m · 7칸'), and a medal pip (empty, bronze, silver or gold). Locked nodes are frosted silhouettes with the unlock condition ('얼어붙은 호수를 클리어하세요'). Aurora shows a '?' until stages 1-6 are cleared, and endless-glacier branches off after stage 2. Keyboard: left and right move between nodes, Enter opens one. The last-played stage is preselected (Progress.lastStage).\n2. Stage Card, shown before play: the theme picture, the one-line new mechanic (mechanicKo) with a tiny looping example (a 3x4 board demo driven by the real game.ts with a scripted input, so the example is the real rules), and the medal checklist with the criteria you've met ticked. Also a toggle '코스: 고정 / 랜덤' (fixed is the default; it is stored in Progress.random) and Start.\n3. In play: a stage banner on start ('3 · 녹는 얼음 동굴 — 얇은 얼음은 바람에 닿으면 녹아요'). A first-occurrence hint bubble for the stage's mechanic, driven by the event type (melt, friend-spawn, avalanche). HUD extras only when the stage has them: a swing counter and 'stamina bone' label in swing mode, a distance-to-avalanche gauge on the left edge, a friends count with icons, and a level timer against regulation time (turns red when over). The scenery changes on each levelclear event using meta.scenery[level].\n4. Results (replaces the current showResults): the medal earned, with the criteria checklist animated, plus depth, score, time, swings or friends where relevant, a 'NEW' tag on records, and toasts for newly unlocked stages. Buttons: 다시 (retry, same seed), 다음 스테이지 (if unlocked), 스테이지 선택. recordRun is only called when the run isn't a dev ?depth/?stage skip.\n5. Storage: one key 'dig-down:progress:v1' holds Progress JSON, and every read and write is wrapped in try/catch. If storage is unavailable the game still runs, with only stage 1 open plus whatever this session unlocked. That is held in memory, so a blocked storage doesn't strand the player. The old 'dig-down:best' is folded into frozen-lake on first load. Dev params: ?stage=<id> starts a stage directly, ?unlock=all unlocks everything without saving.",
+      "implementation_order": [
+        "1. Groundwork (TDD): stage.cols, g.rng in state, generateRows(g, from, to), SOLO set in computeChunks, g.stats and runResult(). DEFAULT_STAGE gains cols:9, air {kind:'time'}, rules {}. Snapshot test that the default board is unchanged, and all 28 or more existing tests stay green. Add a test helper boardFrom(ascii[], stage) to build small boards by hand.",
+        "2. stages.ts and progress.ts (pure, with tests): the STAGES catalogue with snowy-hill (7 columns, 300m) and frozen-lake (the current game) only. medalFor, isUnlocked, recordRun and the localStorage migration, all tested.",
+        "3. UI v1: Stage Select map, Stage Card, Results with medals and unlock toasts, dev ?stage=. Check that the 3D renderer handles 7 columns (camera fit by g.cols; it currently assumes COLS). Ship: two stages playable with medals.",
+        "4. Regulation time bonus (tests), on frozen-lake and later stages.",
+        "5. Frozen Friends (FRIEND cell, xPopped, spawnFriend, takeFriend, tests), plus renderer sprite. Frozen-lake now has its twist.",
+        "6. Thaw ice (THAW cell, melt timer, meltTag, tests), plus a renderer crack shader driven by cell.melt/thawTime. Ship stages 1-3, the first content milestone.",
+        "7. Headless sim bot (vitest bench script) that plays seeded runs with a greedy drill-down policy and a chain-seeking policy. Use it to calibrate the Silver and Gold thresholds and swing targets, and record the numbers in tasks/.",
+        "8. Packed snow (SNOW, tests) and stage 4.",
+        "9. Swing air mode (AirRule, crush-as-air, swing bonus, tests) and stage 5, plus the stamina HUD.",
+        "10. Avalanche (g.avalanche, wipe/catch/pushback, tests) and stage 6, plus the avalanche wall visual and gauge.",
+        "11. capsuleMul and 11-column support, then Aurora stage 7 (data only, plus a renderer width check).",
+        "12. Endless generation (g.levels growing, levelFn, tests) and endless-glacier. Optionally a daily seed (yyyymmdd hash).",
+        "13. Playtest pass: tune per-stage numbers from bot and human runs, and write the review section in tasks/20261028-stages-todo.md."
+      ],
+      "open_questions": [
+        "Should fixed course seeds be the default (better for route learning and pattern discovery) with Random as an option, or the other way round? And should Random runs count for best scores?",
+        "Every per-stage number (thaw/snow chances, melt times, avalanche speed, swing costs, medal thresholds) is our own tuning. No source gives per-stage figures for the series. Is it OK to calibrate them with a headless sim bot before human playtesting?",
+        "Frozen Friends rate: the original needs 30 popped X blocks per Undergrounder. We propose 12 per friend and a 1UP every 3 friends for a 500m stage. Is the 1UP too generous next to the 100,000-point extend?",
+        "Avalanche erases cells above it rather than pushing them down. Is that the feel you want (it makes the space overhead safer when the avalanche is near), or should it shove blocks down and crush instead?",
+        "In swing mode, crushing costs 20% air instead of a life (from Ace). Is mixing the two failure costs in one stage clear enough for players?",
+        "Width: does the Three.js camera/board layout already scale with g.cols, or does supporting 7 and 11 columns need renderer work in main3d.ts (the COLS import)?",
+        "Endless: keep all rows in memory (about 45k cells at 5000m is fine) or trim rows far above the mole? v1 proposes no trimming.",
+        "Later additions not in scope: Time Attack (no air, clocks, Reverse variants), extra characters (husky, penguin, robot sled with G-style trade-offs), a boss stage after stamps (DrillLand). Pick one for the next phase?",
+        "Should Hard variants of stages 1-6 (DrillLand Level 2/3 style) unlock after Aurora, or are medals enough replay value for now?"
+      ]
+    },
+    "critique": {
+      "keep": [
+        "Fixed course seed by default with a Random toggle. This is where route learning and shareable discoveries come from. Keep seeded and random best scores in separate fields.",
+        "Hammer-igloo (air per swing). It changes strategy the most: time costs nothing, so every board becomes a static puzzle you can plan, and veterans and beginners will play visibly differently from the first minute. It also needs no new block art. The precedent is real: Mr. Driller G's Scenario Driller costs 1% air per block, and Drill Spirits JP/EU has Dristone Driller, which is about drilling as little as possible.",
+        "Thaw ice that starts melting once exposed. A delayed trigger you set and walk away from (dig next to it, leave, and the stack drops for a chain) is a pattern the base game doesn't have. MD2 Crystal Blocks really do dissolve after flashing, so the reference holds. Starting the timer on exposure is your own choice, and a good one for readability.",
+        "Snowy-hill as a data-only on-ramp (fewer colours, slower drain, hints driven by first-occurrence events). Gold needing 'one chain of 2+' teaches that chains exist.",
+        "Each mechanic is data on StageDef plus deterministic, Vitest-tested code. Building tests from hand-made ASCII boards (boardFrom) is the right tool.",
+        "A DEFAULT_STAGE regression snapshot (the first 30 rows match today's game) as the gate for the groundwork step.",
+        "Building a headless sim bot to calibrate thresholds. Answer to open question 2: yes, but only as a sanity floor and ceiling. Bots are poor at chains and X herding, so Silver and Gold still need human runs.",
+        "MD2-style unlock structure (a 'North' stage after the earlier ones) and endless unlocking early for veterans. 'The North' really is MD2 Mission's 2000m Very Hard course, and India is 500m Easy."
+      ],
+      "problems": [
+        "Pillar 1 ('exactly one rule per stage') is broken by the design itself. Frozen-lake adds friends AND the regulation time bonus. Igloo changes the air economy, the crush cost, the capsule rate and adds a swing bonus. Avalanche adds the chaser, halves the drain, adds a new capsule type (cocoa, +15%) and pushback. Aurora adds 11 columns AND irregular supply. Players can't isolate a pattern when 3-4 variables move at once.",
+        "The difficulty curve is inverted. Stage 2 (frozen-lake) is the full current arcade game: 2 colours at level 3, drain 1.98-2.16, guard 0.9. That is harder than stages 3 and 4, whose drain is lower ([1.32,1.5,1.8,2.0,2.1]) and which run 3-4 colours. The jump from a 300m 7-column tutorial to the full 500m arcade is the biggest jump in the whole run, and it sits where the player is newest.",
+        "Frozen Friends doesn't create a new strategy. Herding 4+ X groups already exists in the base rules. Friends only add score on top. Spawning the friend in a random coloured cell 3 to 15 rows below is a teleport the player can't see coming, so collecting it is luck rather than routing. The sources also disagree with the design: Horipedia and StrategyWiki say each 4+ X pop leaves an Undergrounder (Chisokojin, 765 pts) right there. The design's 'after 30' reading of the PS1 manual should be re-checked before it is quoted as sourced.",
+        "Snow-forest overlaps thaw-cave. 'Knock out a pillar to drop a stack on purpose' is the same delayed or manual-trigger pattern, minus the timer. Removing a single cell exactly is the only new thing. Snow that has fallen and never pops also piles up as permanent clutter, and its Silver medal (largest pop 8+) has nothing to do with snow.",
+        "The avalanche fights the core loop. Erasing everything above the line removes falling overhangs, the base game's main hazard and source of decisions, exactly while you are surfing close to it. The dominant strategy becomes 'drill straight down, never look sideways'. That is the opposite of pattern discovery. It also stacks two pressures (air drain plus chaser) when your pillar says one resource per stage. The speed of 2.8 rows/s at L5 is unverified against real drill throughput, where an X block takes 5 swings.",
+        "Readability overload in Aurora L8-10. On 11 columns there are 4 colours plus X, capsule, CLEAR, THAW, SNOW and FRIEND, six special cell types at once on a storybook palette. A 1000m run (about 12-15 min) that you can lose at 900m is also a harsh capstone for a browser game.",
+        "Width variation is not free (this answers open question 6). src/main3d.ts imports the fixed ROWS and GOAL_DEPTH, hard-codes 9 columns (`const MAX = 9 * WINDOW_ROWS * 2`, `goalFloor.position.set(4, wy(ROWS - 1) ...)`), and fits the camera to 'at least 11 columns'. Stage-defined length breaks the renderer just as much as width does. Only src/main.ts already reads game.cols.",
+        "Melt-chain attribution (a meltTag that is cleared 'when the chunk settles without popping') is fragile when stacks stick to other chunks or merge mid-fall. Medals built on it (thaw Silver and Gold) will feel random if the tag drops off in edge cases.",
+        "The medal rules are inconsistent. Aurora Gold is 'no life lost OR a score target'. Gold medals mostly test general play (no life lost, time) rather than the stage's mechanic. Silver and Gold thresholds ship before the bot exists.",
+        "The scope is too big for one plan: 8 stages, 6 mechanics, a trail map, a Stage Card with a live real-engine demo board, an animated results checklist, a sim bot, endless mode and a daily seed. The live demo board alone needs scripted input playback and a second renderer instance.",
+        "Smaller factual nits. G's 1%-per-block rule is 'Scenario Driller'. Dristones in G are collectible items, not an air mode. 'DrillLand World Drill Tour L1 is 7 columns' and the 'Drill Till You Drop' Dristone claim were not verified. Mark them unsourced or drop them."
+      ],
+      "changes": [
+        "Enforce one variable per stage. Make the regulation time bonus a universal base rule (every stage, shown on the HUD from stage 1) rather than a stage feature. Igloo keeps 'air per swing' only: crush stays a life lost as in every other stage, the capsule rate stays normal, and target swings are shown only as a medal line. Avalanche keeps the chaser only: no time drain at all (air still drops for X blocks) and normal capsules that also push it back, with no new 'cocoa' type. Aurora stays at 9 columns and adds irregular supply only.",
+        "Reorder for a rising curve: 1 snowy-hill (base) → 2 thaw-cave → 3 hammer-igloo → 4 frozen-lake (the current arcade, as the 'graduation exam') → 5 avalanche (reworked) → 6 aurora → endless. Ease thaw-cave drain to [1.2,1.32,1.5,1.62,1.8] so it is easier than the arcade.",
+        "Rework Frozen Friends to follow the original: when a 4+ X group pops, a FRIEND appears at one of the cells that popped (rng picks which). It stays there as a solo block until you collect it or it gets crushed. That makes 'pop X groups near your route, then detour to collect' a visible routing decision. Drop the 1UP every 3rd friend and just pay 765 x n, because lives already come from the 100k extend. Fold this into frozen-lake (stage 4) as its single addition.",
+        "Cut snow-forest from v1. If it comes back, give it one job thaw doesn't have, e.g. snow that lands on snow packs into an unbreakable-until-drilled wall. Otherwise it is clutter.",
+        "Rework the avalanche so it doesn't delete the core hazard. It erases only rows more than N=4 above the puppy's cell. The 4 rows directly above stay live, so overhangs still threaten. Put guarded capsules at least 2 columns off the straight-down line so pushback requires a detour. If that is too costly, cut the avalanche and use the slot for Time Attack (no air, fixed seed, clock), which fits 'route learning' directly.",
+        "Keep a 9-column board for every stage in v1. Snowy-hill gets its easier start from 2-3 colours, low X and slow drain instead. Make the renderers read g.rows, g.cols and a g.goalDepth so stage length works; that is a prerequisite either way. 7 and 11 columns can come later as their own step with camera fit by g.cols.",
+        "Replace meltTag with an attribution you can test: when a THAW melts, record {time, x, y}. A pop counts as melt-triggered if any member was resting in column x above y at that melt and the pop happens within the fall time plus wobble time plus 0.5s. Write a test for the case where a stack sticks to another chunk before popping.",
+        "Medals: Bronze = clear. Silver = the stage's mechanic used (melt chains, swings at or under target, friends collected). Gold = Silver criterion tightened plus the time bonus at or above a threshold. Ship v1 with Bronze plus a placeholder Silver and leave Gold locked until the bot and a human pass have set the numbers.",
+        "Cut the UI scope for v1: a vertical list or simple map, a Stage Card with a static illustration and one-line rule, and plain results with medal and NEW record. Defer the live demo board, animated checklist, scenery swaps and daily seed.",
+        "Make endless and Aurora shorter at first: Aurora 700m, endless with no trimming (45k cells is fine). Consider allowing 2 lives in endless until the medal depths are calibrated."
+      ],
+      "first_milestone": "Build three stages playable from a plain stage list, all on 9 columns. Snowy-hill is data only: 300m, colours [2,3,3], low X, drain [1.0,1.15,1.32]. Hammer-igloo is the only new rule: air per swing with no time drain, crush unchanged. Frozen-lake is today's game, unchanged. Groundwork underneath: g.rng in state, generateRows, StageDef.air, g.stats, runResult, and renderers reading g.rows, g.cols and goal depth instead of the ROWS/GOAL_DEPTH/9 constants. Add progress.ts for Bronze/clear and best score per stage behind try/catch localStorage, and a DEFAULT_STAGE snapshot test so all existing tests stay green. This milestone tests the core question cheaply: does one rule change (swing air) make players visibly change strategy? It needs no new block art and no width work. If the swing stage plays differently in playtests, add thaw-cave next."
+    }
+  },
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Research"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 2,
+      "title": "Design"
+    },
+    {
+      "type": "workflow_phase",
+      "index": 3,
+      "title": "Critique"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "research:A",
+      "phaseIndex": 1,
+      "phaseTitle": "Research",
+      "agentId": "ac2b4e1e4cb8aa004",
+      "model": "claude-opus-5-5[1m]",
+      "state": "done",
+      "startedAt": 1793120461073,
+      "queuedAt": 1793120461057,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "You are a game researcher.\n\nPROJECT: \"Dig Down\", a browser Mr. Driller clone (TypeScript, Three.js renderer, pure logic in src/game.ts with Vitest tests).\nCurrent game = ONE random run: 9 columns, 500m goal, 100m levels (5). Per-level preset colour count [4,3,2,4,3] out of 4 colours.\nBlocks: coloured blocks (same-colour chunks clear together when drilled; unsupported chunks wobble ~1s then fall; f…",
+      "promptFramed": true,
+      "lastProgressAt": 1793120658157,
+      "tokens": 51634,
+      "toolCalls": 36,
+      "durationMs": 197083,
+      "resultPreview": "{\"findings\":[{\"claim\":\"Original Mr. Driller (arcade, 1999) offered just two goal lengths, a 500m Challenge and a 1000m Challenge. The console ports added Time Attack (clear a course before a record time) and Survival (endless, drill as long as possible).\",\"basis\":\"sourced\",\"source\":\"https://digdug.miraheze.org/wiki/Mr._Driller ; https://en.wikipedia.org/wiki/Mr._Driller_(video_game)\"},{\"claim\":\"Mr…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "research:B",
+      "phaseIndex": 1,
+      "phaseTitle": "Research",
+      "agentId": "a389c718c34071917",
+      "model": "claude-opus-5-5[1m]",
+      "state": "done",
+      "startedAt": 1793120461073,
+      "queuedAt": 1793120461057,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "You are a game researcher.\n\nPROJECT: \"Dig Down\", a browser Mr. Driller clone (TypeScript, Three.js renderer, pure logic in src/game.ts with Vitest tests).\nCurrent game = ONE random run: 9 columns, 500m goal, 100m levels (5). Per-level preset colour count [4,3,2,4,3] out of 4 colours.\nBlocks: coloured blocks (same-colour chunks clear together when drilled; unsupported chunks wobble ~1s then fall; f…",
+      "promptFramed": true,
+      "lastProgressAt": 1793120697863,
+      "tokens": 59381,
+      "toolCalls": 33,
+      "durationMs": 233594,
+      "resultPreview": "{\"findings\":[{\"claim\":\"Mr. Driller (PS1, original) manual: Brown X-blocks need five strikes and breaking one costs 20% air. Below 30% air a skull appears with an alarm and countdown, and it goes away once air is back above 30%. The manual gives no number for an air capsule, only that each one 'restores some' air. Choice it creates: whether to drill an X block (air cost) or walk around it.\",\"basis\"…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "research:C",
+      "phaseIndex": 1,
+      "phaseTitle": "Research",
+      "agentId": "a515a6ba33deed0ba",
+      "model": "claude-opus-5-5[1m]",
+      "state": "done",
+      "startedAt": 1793120461074,
+      "queuedAt": 1793120461057,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "promptPreview": "You are a game researcher.\n\nPROJECT: \"Dig Down\", a browser Mr. Driller clone (TypeScript, Three.js renderer, pure logic in src/game.ts with Vitest tests).\nCurrent game = ONE random run: 9 columns, 500m goal, 100m levels (5). Per-level preset colour count [4,3,2,4,3] out of 4 colours.\nBlocks: coloured blocks (same-colour chunks clear together when drilled; unsupported chunks wobble ~1s then fall; f…",
+      "promptFramed": true,
+      "lastProgressAt": 1793120700638,
+      "tokens": 52138,
+      "toolCalls": 30,
+      "durationMs": 236369,
+      "resultPreview": "{\"findings\":[{\"claim\":\"Mr. Driller 2's Mission Driller is a short set of hand-picked, themed stages, each with a fixed depth and difficulty label: India 500m (Easy), America 1000m (Normal), Egypt 2000m (Hard), The North 2000m (Very Hard). The player picks a stage, and finishing it plays a cutscene. So the series' own 'stages' differ mainly in goal depth and difficulty, with the location as the the…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "design",
+      "phaseIndex": 2,
+      "phaseTitle": "Design",
+      "agentId": "a43ef05b47c168526",
+      "model": "claude-opus-5-5[1m]",
+      "state": "done",
+      "startedAt": 1793120701771,
+      "queuedAt": 1793120701749,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "// game.ts holds only rules and data. The catalogue, medals…",
+      "promptPreview": "You are a lead game designer.\n\nPROJECT: \"Dig Down\", a browser Mr. Driller clone (TypeScript, Three.js renderer, pure logic in src/game.ts with Vitest tests).\nCurrent game = ONE random run: 9 columns, 500m goal, 100m levels (5). Per-level preset colour count [4,3,2,4,3] out of 4 colours.\nBlocks: coloured blocks (same-colour chunks clear together when drilled; unsupported chunks wobble ~1s then fall…",
+      "promptFramed": true,
+      "lastProgressAt": 1793120939803,
+      "tokens": 62433,
+      "toolCalls": 6,
+      "durationMs": 238031,
+      "resultPreview": "{\"pillars\":[\"Each stage adds one rule. Stage n brings in exactly one mechanic on top of the base rules, so the player can find its pattern without other variables in the way. This follows how Namco varied stages: depth, board width, the resource that limits you, and one new block or hazard (MD2 Mission, DrillLand attractions).\",\"Fixed courses make routes learnable. Every stage plays a fixed 'cours…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "critique",
+      "phaseIndex": 3,
+      "phaseTitle": "Critique",
+      "agentId": "a70fadfea012842bc",
+      "model": "claude-opus-5-5[1m]",
+      "state": "done",
+      "startedAt": 1793120940937,
+      "queuedAt": 1793120940920,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Build three stages playable from a plain stage list, all on…",
+      "promptPreview": "You are a skeptical veteran puzzle-game designer (shipped arcade puzzle games). Review this stage design for Dig Down.\n\nPROJECT: \"Dig Down\", a browser Mr. Driller clone (TypeScript, Three.js renderer, pure logic in src/game.ts with Vitest tests).\nCurrent game = ONE random run: 9 columns, 500m goal, 100m levels (5). Per-level preset colour count [4,3,2,4,3] out of 4 colours.\nBlocks: coloured blocks…",
+      "promptFramed": true,
+      "lastProgressAt": 1793121070452,
+      "tokens": 54327,
+      "toolCalls": 8,
+      "durationMs": 129514,
+      "resultPreview": "{\"keep\":[\"Fixed course seed by default with a Random toggle. This is where route learning and shareable discoveries come from. Keep seeded and random best scores in separate fields.\",\"Hammer-igloo (air per swing). It changes strategy the most: time costs nothing, so every board becomes a static puzzle you can plan, and veterans and beginners will play visibly differently from the first minute. It …"
+    }
+  ],
+  "totalTokens": 279913,
+  "totalToolCalls": 113
+}
