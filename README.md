@@ -9,5 +9,5 @@
 
 ## 크레딧
 - 배경 3D 소품: [Polyfork](https://polyfork.dev) 무료 저폴리 모델 (런타임에 Polyfork CDN에서 불러옴, 파일은 저장소에 포함하지 않음)
-- 폰트: [Jua](https://fonts.google.com/specimen/Jua) (SIL Open Font License)
+- 폰트: [Jua](https://fonts.google.com/specimen/Jua) (SIL Open Font License, `public/fonts/`에 서브셋 포함, 라이선스 `public/fonts/OFL.txt`)
 - 엔진: [three.js](https://threejs.org)

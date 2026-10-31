@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <title>Dig Down</title>
   <link rel="stylesheet" href="/src/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+  <link rel="preload" href="fonts/jua.woff2" as="font" type="font/woff2" crossorigin />
   <style>
+    /* Jua is self-hosted (public/fonts, SIL OFL, subset to Latin + Hangul). Google Fonts split it
+       into ~100 Korean slices loaded on demand, so HUD text first drew in the fallback (Comic Sans
+       digits + system Hangul: wider, other baseline) and on Safari stayed overlapping and spilling
+       out of its pill. block: invisible for a moment rather than drawn in the wrong font. */
+    @font-face { font-family: "Jua"; src: url("fonts/jua.woff2") format("woff2"); font-display: block; }
     #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
     /* Style A HUD: storybook font and the same navy ink as the board */
-    body { font-family: "Jua", "Comic Sans MS", system-ui, sans-serif;
+    body { font-family: "Jua", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
       word-break: keep-all; overflow-wrap: break-word; } /* Korean wraps at spaces, never mid-word (a too-long word still breaks) */
     /* HUD as one aligned top bar (UI review 4): hearts left, depth big in the middle, score right,
        the pause button docked at its end; the air row and the medal chip sit under it. The three
@@ -23,9 +26,9 @@
       box-shadow: 0 3px 0 var(--ink); font-weight: normal; }
     #lives { justify-self: start; color: var(--pink); letter-spacing: 2px; font-size: var(--fs-l); white-space: nowrap; }
     #score { justify-self: end; color: var(--gold-ink); font-size: var(--fs-l); white-space: nowrap; }
-    #depth { justify-self: center; display: flex; align-items: baseline; gap: 6px; white-space: nowrap; line-height: 1.1; }
+    #depth { justify-self: center; display: flex; align-items: baseline; gap: 4px; min-width: 0; white-space: nowrap; line-height: 1.1; }
     #depth b { font-size: var(--fs-xl); font-weight: normal; }
-    #depth .u { font-size: var(--fs-m); margin-left: -4px; }
+    #depth .u { font-size: var(--fs-m); } /* a negative margin overlapped the digits in other fonts */
     #depth .lv { padding: 0 6px; border-radius: 8px; background: var(--ink); color: var(--cream); font-size: var(--fs-xs); }
     /* air (UI review 3): the label and number sit outside the bar in ink on cream, the dark bar
        only shows the level; under 30% the whole row turns red and pulses */

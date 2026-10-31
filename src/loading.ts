@@ -30,7 +30,8 @@ const check = () => { if (texturesDone && fontDone) finish(); };
 const mgr = THREE.DefaultLoadingManager;
 mgr.onProgress = (_url, loaded, total) => setProgress((loaded / Math.max(1, total)) * 0.95);
 mgr.onLoad = () => { texturesDone = true; check(); };
-(document.fonts?.ready ?? Promise.resolve()).then(() => { fontDone = true; check(); });
+// the canvas text (banners, floaters) needs the face loaded, not just declared
+(document.fonts?.load('16px Jua') ?? Promise.resolve()).catch(() => {}).then(() => { fontDone = true; check(); });
 setTimeout(finish, MAX_WAIT);
 
 export const isLoading = () => !done;

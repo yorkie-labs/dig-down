@@ -580,7 +580,7 @@ const goalTex = canvasTex(1024, 384, (g) => {
   g.fill();
   g.stroke();
   g.fillStyle = INK;
-  g.font = '78px "Jua", "Comic Sans MS", sans-serif';
+  g.font = '78px "Jua", "Apple SD Gothic Neo", sans-serif';
   g.textAlign = 'center';
   g.textBaseline = 'middle';
 });
@@ -602,13 +602,14 @@ function drawGoalBanner(depthM: number) {
   g.roundRect(266, 74, 492, 112, 24);
   g.fill();
   g.fillStyle = INK;
-  g.font = '78px "Jua", "Comic Sans MS", sans-serif';
+  g.font = '78px "Jua", "Apple SD Gothic Neo", sans-serif';
   g.textAlign = 'center';
   g.textBaseline = 'middle';
   g.fillText(`★ ${depthM}m GOAL ★`, 512, 134);
   goalTex.needsUpdate = true;
 }
-document.fonts?.ready.then(() => drawGoalBanner(goalDepthShown || GOAL_DEPTH));
+// fonts.ready resolves before an unused face is fetched: ask for Jua explicitly
+document.fonts?.load('78px Jua').catch(() => {}).then(() => drawGoalBanner(goalDepthShown || GOAL_DEPTH));
 
 // ---- blocks with analytic chunk ink ----
 // Each instance carries an 8-neighbour mask; the fragment shader draws a constant-width ink line
@@ -3213,7 +3214,7 @@ function drawFx(t: number, dt: number) {
     // pop in with a little overshoot, then float and fade
     const pop = f.age < 0.15 ? 0.6 + (f.age / 0.15) * 0.6 : f.age < 0.25 ? 1.2 - ((f.age - 0.15) / 0.1) * 0.2 : 1;
     const big = /CHAIN|CLEAR|COMBO/.test(f.text) ? 1.35 : 1;
-    fxCtx.font = `${Math.round(24 * pop * big)}px "Jua", "Comic Sans MS", sans-serif`;
+    fxCtx.font = `${Math.round(24 * pop * big)}px "Jua", "Apple SD Gothic Neo", sans-serif`;
     fxCtx.lineWidth = 6 * pop;
     fxCtx.globalAlpha = Math.min(1, f.life * 2);
     fxCtx.strokeText(f.text, px, py);
@@ -3246,7 +3247,7 @@ function drawFx(t: number, dt: number) {
     project.set(-0.62, wy(row), 0).project(camera);
     const px = (project.x * 0.5 + 0.5) * W, py = (-project.y * 0.5 + 0.5) * H;
     const major = d % 100 === 0;
-    fxCtx.font = `${major ? 24 : 17}px "Jua", sans-serif`;
+    fxCtx.font = `${major ? 24 : 17}px "Jua", "Apple SD Gothic Neo", sans-serif`;
     fxCtx.textAlign = 'right';
     fxCtx.lineWidth = 4;
     fxCtx.strokeStyle = INK;
@@ -3298,7 +3299,7 @@ function drawFx(t: number, dt: number) {
     fxCtx.closePath();
     fxCtx.fill();
     fxCtx.stroke();
-    fxCtx.font = `${Math.round(r * 1.5)}px "Jua", sans-serif`;
+    fxCtx.font = `${Math.round(r * 1.5)}px "Jua", "Apple SD Gothic Neo", sans-serif`;
     fxCtx.textAlign = 'center';
     fxCtx.textBaseline = 'middle';
     fxCtx.lineWidth = 4;
@@ -3324,7 +3325,7 @@ function drawFx(t: number, dt: number) {
     banner.life -= dt;
     if (banner.life <= 0) { banner = null; return; }
     fxCtx.globalAlpha = Math.min(1, banner.life * 2);
-    fxCtx.font = '64px "Jua", "Comic Sans MS", sans-serif';
+    fxCtx.font = '64px "Jua", "Apple SD Gothic Neo", sans-serif';
     fxCtx.lineWidth = 8;
     fxCtx.strokeText(banner.text, W / 2, H * 0.2);
     fxCtx.fillStyle = '#ffe14a';
@@ -3353,7 +3354,7 @@ function drawComboMeter(t: number) {
   fxCtx.fillRect(px - w / 2, py - h / 2, w * fill, h);
   if (game.combo > 0) {
     if (comboLabelN !== game.combo) { comboLabelN = game.combo; comboLabel = `×${game.combo}`; }
-    fxCtx.font = '18px "Jua", sans-serif';
+    fxCtx.font = '18px "Jua", "Apple SD Gothic Neo", sans-serif';
     fxCtx.textAlign = 'left';
     fxCtx.lineWidth = 4;
     fxCtx.strokeStyle = INK;
@@ -3367,7 +3368,7 @@ function drawComboMeter(t: number) {
 
 // Tutorial prompt under the level banner: word-wrapped to the board width, same ink outline.
 function drawPrompt(text: string, top: number) {
-  fxCtx.font = '22px "Jua", "Comic Sans MS", sans-serif';
+  fxCtx.font = '22px "Jua", "Apple SD Gothic Neo", sans-serif';
   const maxW = Math.min(460, W - 32);
   const lines: string[] = [];
   let line = '';
