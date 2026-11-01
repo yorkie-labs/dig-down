@@ -567,7 +567,7 @@ const props = new URLSearchParams(location.search).get('props') !== '0'
 
 // ?bg=3d walls (tinted per band with the rest of the backdrop through cliffMats)
 const iceWalls = BG === '3d' ? addIceWalls({ scene, ramp, ink: INK, shaftTop, edgeL: -0.55, edgeR: 8.55, placeDeep }) : null;
-if (iceWalls) cliffMats.push(iceWalls.material);
+if (iceWalls) cliffMats.push(...iceWalls.materials);
 
 // Shaft frame: a navy ice rim down both board edges. Hides the slab side faces the oblique view
 // shows on the right edge only (a lopsided coloured sliver) and closes the board like a picture.
