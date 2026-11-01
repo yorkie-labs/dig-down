@@ -24,7 +24,7 @@ describe('sim smoke', () => {
         expect(r.chainSteps.slice(1).some((n) => n > 0)).toBe(r.maxChain >= 2);
       }
     }
-  });
+  }, 30_000); // 8 short bot runs: ~3.3s here, 5.7s on the CI runner (default limit 5s)
 
   it('the board window speed-up gives the same result as a full-board run', () => {
     for (const { def } of STAGES) {

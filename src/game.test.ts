@@ -936,7 +936,7 @@ describe('studio review: hand-made pieces', () => {
         expect(ascii(g), `${s.def.id} seed ${seed}`).toEqual(before);
       }
     }
-  });
+  }, 30_000); // every stage x 8 seeds: ~4.5s here, 8.4s on the CI runner (default limit 5s)
 
   // the stamped cells at a placement: X, capsule, thaw and holes as drawn, letters one colour each
   const stampedAt = (g: Game, p: Placement) => {
