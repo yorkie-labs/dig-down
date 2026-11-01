@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # main push = public deploy: a red test stops it here
+      - run: npm test
       # Pages serves the site from /<repo>/; asset URLs in the code are page-relative
       - run: npm run build
         env:

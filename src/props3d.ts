@@ -51,25 +51,39 @@ function liftDark(geo: THREE.BufferGeometry) {
   col.needsUpdate = true;
 }
 
+// Converted materials, shared: every clone of a file points at the same source materials (clone()
+// copies the reference), so all spruces share one toon material instead of one per mesh per clone
+// (~150 props). Keyed by source material and whether the mesh carries vertex colours.
+const toonOf = new WeakMap<THREE.Material, Map<boolean, THREE.MeshToonMaterial>>();
+const inkOf = new Map<string, THREE.MeshBasicMaterial>();
+
 // Convert a loaded model to the house style. Outline = back faces of a slightly inflated copy.
 function inkify(root: THREE.Object3D, ramp: THREE.Texture, ink: string, outline: number) {
-  const inkMat = new THREE.MeshBasicMaterial({ color: ink, side: THREE.BackSide, fog: false });
+  let inkMat = inkOf.get(ink);
+  if (!inkMat) inkOf.set(ink, (inkMat = new THREE.MeshBasicMaterial({ color: ink, side: THREE.BackSide, fog: false })));
   const meshes: THREE.Mesh[] = [];
   root.traverse((o) => { if ((o as THREE.Mesh).isMesh) meshes.push(o as THREE.Mesh); });
   for (const m of meshes) {
     const src = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshStandardMaterial;
-    // moonlit: pull the daylight palette toward the night-blue scene so white snow isn't the
-    // brightest thing on screen (the board blocks must stay the focus)
-    const color = (src.color ?? new THREE.Color('#ffffff')).clone().multiply(NIGHT);
     // keep whatever carries the palette (vertex colours on most Polyfork files, a map on some),
     // and give normal-less meshes normals: without them toon lighting goes black (the amber lump)
     if (!m.geometry.getAttribute('normal')) m.geometry.computeVertexNormals();
     liftDark(m.geometry);
-    m.material = new THREE.MeshToonMaterial({
-      color, gradientMap: ramp, fog: false, side: THREE.DoubleSide,
-      vertexColors: !!m.geometry.getAttribute('color'), map: src.map ?? null,
-      transparent: src.transparent, opacity: src.opacity, depthWrite: !src.transparent,
-    });
+    const vertexColors = !!m.geometry.getAttribute('color');
+    let byVc = toonOf.get(src);
+    if (!byVc) toonOf.set(src, (byVc = new Map()));
+    let toon = byVc.get(vertexColors);
+    if (!toon) {
+      // moonlit: pull the daylight palette toward the night-blue scene so white snow isn't the
+      // brightest thing on screen (the board blocks must stay the focus)
+      const color = (src.color ?? new THREE.Color('#ffffff')).clone().multiply(NIGHT);
+      byVc.set(vertexColors, (toon = new THREE.MeshToonMaterial({
+        color, gradientMap: ramp, fog: false, side: THREE.DoubleSide,
+        vertexColors, map: src.map ?? null,
+        transparent: src.transparent, opacity: src.opacity, depthWrite: !src.transparent,
+      })));
+    }
+    m.material = toon;
     if (src.transparent) continue; // a see-through shell (amber) gets no ink hull, or it reads as a solid blob
     // a rigged model (the penguin) needs a skinned hull bound to the same skeleton, or the
     // outline stays in bind pose somewhere else

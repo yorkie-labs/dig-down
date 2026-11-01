@@ -16,7 +16,7 @@ import {
 import { dailyKey, dailyStage, isDailyId, isDryLevel, ruleOf, STAGES, StageInfo, stageById, stageDepth } from './stages';
 import {
   AIR_CAPSULE, AIR_MAX, AIR_WARNING, CAPSULE, levelTempo, levelAirTempo, levelProgress, AIR_START, AIR_END, Cell, cellAt, CLEAR, CLOCK, ensureRows, FRIEND, levelIn, THAW, XBLOCK_HP, createGame, depthOf, depthOfRow, Dir,
-  COMBO_WINDOW, drill, DrillResult, Game, GameEvent, GOAL_DEPTH, keyPieceBelow, ROWS, levelOfDepth, move, SKY_ROWS, update, XBLOCK,
+  COMBO_WINDOW, drill, DrillResult, Game, GameEvent, GOAL_DEPTH, keyPieceBelow, ROWS, levelOfDepth, move, SKY_ROWS, TICK, update, XBLOCK,
 } from './game';
 import {
   initSfx, isMuted, sfxBreak, sfxCapsule, sfxClearRow, sfxClock, sfxCombo, sfxCrush, sfxDangerTick, sfxFriend, sfxHammer, sfxHeartbeat,
@@ -938,6 +938,33 @@ for (const m of [blocks, xBlocks, capsules, capInk, boardShadow]) m.frustumCulle
 
 const tmp = new THREE.Object3D();
 const tmpColor = new THREE.Color();
+// CSS colour string -> THREE.Color, parsed once: the pools and the board tint hundreds of instances
+// a frame from a handful of palette strings, and Color.set(string) re-parses every call
+const parsedColors = new Map<string, THREE.Color>();
+function cssColor(c: string) {
+  let v = parsedColors.get(c);
+  if (!v) parsedColors.set(c, (v = new THREE.Color(c)));
+  return v;
+}
+// Hand the first n instances to the GPU: only that much of each buffer is uploaded, and an empty
+// pool (the usual state of every effect) uploads nothing
+function uploadInstances(mesh: THREE.InstancedMesh, n: number) {
+  mesh.count = n;
+  if (n === 0) return;
+  uploadRange(mesh.instanceMatrix, n);
+  if (mesh.instanceColor) uploadRange(mesh.instanceColor, n);
+}
+function uploadRange(attr: THREE.BufferAttribute, n: number) {
+  attr.clearUpdateRanges();
+  attr.addUpdateRange(0, n * attr.itemSize);
+  attr.needsUpdate = true;
+}
+// Age a pool in place, dropping what ran out (no new array per frame)
+function agePool<T extends { life: number }>(list: T[], dt: number) {
+  let n = 0;
+  for (const it of list) if ((it.life -= dt) > 0) list[n++] = it;
+  list.length = n;
+}
 
 // ---- placeholder puppy from primitives (until the Tripo model replaces it) ----
 const mole = new THREE.Group();
@@ -946,7 +973,6 @@ const withInk = (mesh: THREE.Mesh, k = 1.08) => {
   ink.position.copy(mesh.position);
   ink.rotation.copy(mesh.rotation);
   ink.scale.copy(mesh.scale).multiplyScalar(k);
-  mesh.castShadow = true;
   return [ink, mesh];
 };
 // hoodie torso (bobs)
@@ -1529,7 +1555,8 @@ let flashes: Flash[] = [];
 const FLASH_MAX = 120;
 const FLASH_LIFE = 0.32;
 const flashMesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1),
-  new THREE.MeshBasicMaterial({ map: burstTex, transparent: true, depthWrite: false, fog: false }), FLASH_MAX);
+  // cream; the texture carries the navy ink
+  new THREE.MeshBasicMaterial({ map: burstTex, color: '#fdf6e3', transparent: true, depthWrite: false, fog: false }), FLASH_MAX);
 flashMesh.frustumCulled = false;
 scene.add(flashMesh);
 const shardTex = canvasTex(64, 64, (g) => {
@@ -1585,8 +1612,9 @@ function addGhosts(cells: { x: number; y: number; color: number }[]) {
   }
 }
 function syncGhosts(dt: number) {
-  ghosts = ghosts.filter((g) => (g.life -= dt) > 0);
-  ghosts.forEach((g, i) => {
+  agePool(ghosts, dt);
+  for (let i = 0; i < ghosts.length; i++) {
+    const g = ghosts[i];
     g.vy -= 18 * dt;
     g.x += g.vx * dt;
     g.y += g.vy * dt;
@@ -1598,34 +1626,30 @@ function syncGhosts(dt: number) {
     tmp.scale.setScalar(k * g.size);
     tmp.updateMatrix();
     ghostMesh.setMatrixAt(i, tmp.matrix);
-    ghostMesh.setColorAt(i, tmpColor.set(g.color));
-  });
-  ghostMesh.count = ghosts.length;
-  ghostMesh.instanceMatrix.needsUpdate = true;
-  if (ghostMesh.instanceColor) ghostMesh.instanceColor.needsUpdate = true;
+    ghostMesh.setColorAt(i, cssColor(g.color));
+  }
+  uploadInstances(ghostMesh, ghosts.length);
 }
 
 function syncFlashes(dt: number) {
-  flashes = flashes.filter((f) => (f.life -= dt) > 0);
-  flashes.forEach((f, i) => {
+  agePool(flashes, dt);
+  for (let i = 0; i < flashes.length; i++) {
+    const f = flashes[i];
     const k = 1 - f.life / FLASH_LIFE; // 0 → 1
     tmp.position.set(wx(f.x), wy(f.y), 0.6);
     tmp.rotation.set(0, 0, k * 0.6);
     tmp.scale.setScalar((k < 0.35 ? 0.3 + (k / 0.35) * 0.9 : 1.2 - (k - 0.35) * 0.9) * (f.size ?? 1)); // pop in, then shrink away
     tmp.updateMatrix();
     flashMesh.setMatrixAt(i, tmp.matrix);
-    flashMesh.setColorAt(i, tmpColor.set('#fdf6e3')); // cream; the texture carries the navy ink
-  });
-  flashMesh.count = flashes.length;
-  flashMesh.instanceMatrix.needsUpdate = true;
-  if (flashMesh.instanceColor) flashMesh.instanceColor.needsUpdate = true;
-  (flashMesh.material as THREE.MeshBasicMaterial).opacity = 1;
+  }
+  uploadInstances(flashMesh, flashes.length);
 }
 
 // ---- snow puffs kicked up at the feet when stepping or landing ----
 interface Puff { x: number; y: number; vx: number; life: number; max: number }
 let puffs: Puff[] = [];
 const PUFF_MAX = 40;
+const PUFF_WARM = new THREE.Color('#f4f8ff'), PUFF_COOL = new THREE.Color('#9fb7d8');
 const puffMesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.3, 0.3),
   new THREE.MeshBasicMaterial({ map: flakeTex, color: '#f4f8ff', transparent: true, opacity: 0.7, depthWrite: false, fog: false }),
   PUFF_MAX);
@@ -1652,8 +1676,9 @@ function kickPuffs(n: number) {
   }
 }
 function syncPuffs(dt: number) {
-  puffs = puffs.filter((p) => (p.life -= dt) > 0);
-  puffs.forEach((p, i) => {
+  agePool(puffs, dt);
+  for (let i = 0; i < puffs.length; i++) {
+    const p = puffs[i];
     const k = 1 - p.life / p.max;
     p.x += p.vx * dt;
     tmp.position.set(p.x, p.y + k * 0.18, 0.6); // in front of block faces (z 0.47), or breaths hide behind the cell above
@@ -1661,11 +1686,9 @@ function syncPuffs(dt: number) {
     tmp.scale.setScalar(0.6 + k * 0.9);
     tmp.updateMatrix();
     puffMesh.setMatrixAt(i, tmp.matrix);
-    puffMesh.setColorAt(i, tmpColor.set('#f4f8ff').lerp(new THREE.Color('#9fb7d8'), k)); // cream, cooling as it fades
-  });
-  puffMesh.count = puffs.length;
-  puffMesh.instanceMatrix.needsUpdate = true;
-  if (puffMesh.instanceColor) puffMesh.instanceColor.needsUpdate = true;
+    puffMesh.setColorAt(i, tmpColor.copy(PUFF_WARM).lerp(PUFF_COOL, k)); // cream, cooling as it fades
+  }
+  uploadInstances(puffMesh, puffs.length);
 }
 
 // ---- particles ----
@@ -1676,7 +1699,6 @@ const PMAX = 500;
 // language as the hero and drill, instead of lit 3D octahedrons.
 const parts = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.28, 0.28),
   new THREE.MeshBasicMaterial({ map: shardTex, alphaTest: 0.5, side: THREE.DoubleSide, fog: false }), PMAX);
-parts.castShadow = true;
 parts.frustumCulled = false;
 scene.add(parts);
 
@@ -1811,7 +1833,9 @@ function resize() {
   lastW = W; lastH = H; lastDpr = window.devicePixelRatio || 1;
   for (const c of [canvas, fx]) { c.style.width = `${W}px`; c.style.height = `${H}px`; }
   applyRenderScale();
-  const dpr = window.devicePixelRatio || 1;
+  // capped at 2 like the WebGL canvas: the overlay is cleared and redrawn (vignette included) every
+  // frame, and a DPR-3 phone paid 2.25x the pixels of the 3D view for text and strokes
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
   fx.width = Math.floor(W * dpr);
   fx.height = Math.floor(H * dpr);
   fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2850,6 +2874,10 @@ function scanDanger(live: boolean) {
 }
 
 const DANGER_TINT = new THREE.Color('#ff3b4e');
+// neighbour tests for the outline mask (plain functions: per-cell closures were ~800 allocations a frame)
+// thin ice never merges, so neighbouring thaw cells keep their own outlines
+const sameColor = (color: number, x: number, y: number) => color !== THAW && cellAt(game, x, y)?.color === color;
+const isBlock = (x: number, y: number) => { const n = cellAt(game, x, y); return !!n && n.color !== CAPSULE; };
 function syncBlocks(t: number, dt: number) {
   const centerRow = Math.round(-camY);
   let nb = 0, nx = 0, nc = 0, ns = 0, nf = 0, nk = 0;
@@ -2911,17 +2939,15 @@ function syncBlocks(t: number, dt: number) {
       tmp.updateMatrix();
       boardShadow.setMatrixAt(ns++, tmp.matrix);
       tmp.position.z = 0;
-      // thin ice never merges, so neighbouring thaw cells keep their own outlines
-      const same = (nx: number, ny: number) => cell.color !== THAW && cellAt(game, nx, ny)?.color === cell.color;
-      const L = same(x - 1, y), R = same(x + 1, y), U = same(x, y - 1), D = same(x, y + 1);
+      const c = cell.color;
+      const L = sameColor(c, x - 1, y), R = sameColor(c, x + 1, y), U = sameColor(c, x, y - 1), D = sameColor(c, x, y + 1);
       // A shared edge between two different chunks is inked once (by the right/lower cell's left/top
       // edge), so it matches the outer silhouette width instead of doubling up.
-      const block = (nx: number, ny: number) => { const n = cellAt(game, nx, ny); return !!n && n.color !== CAPSULE; };
       let mask = (L ? 0 : 1) | (R ? 0 : 2) | (U ? 0 : 4) | (D ? 0 : 8);
-      if (!L && block(x - 1, y)) mask += 32768;
-      if (!R && block(x + 1, y)) mask += 65536;
-      if (!U && block(x, y - 1)) mask += 131072;
-      if (!D && block(x, y + 1)) mask += 262144;
+      if (!L && isBlock(x - 1, y)) mask += 32768;
+      if (!R && isBlock(x + 1, y)) mask += 65536;
+      if (!U && isBlock(x, y - 1)) mask += 131072;
+      if (!D && isBlock(x, y + 1)) mask += 262144;
       mask |= ((x * 7 + y * 13) % 4) * 256; // painted-interior variant (stable per cell)
       if (cell.color === CLEAR) mask |= 1024; // aurora-ice shimmer
       if (cell.wobble > 0 && !cell.falling) mask |= 2048; // about to fall
@@ -2932,10 +2958,10 @@ function syncBlocks(t: number, dt: number) {
       if (isX) mask += (XBLOCK_HP - cell.hp) * 4096; // crack stage
       else if (y === SKY_ROWS && cell.color >= 0) mask += 4096; // surface row wears a snow cap
       // inner corners: both sides continue the chunk but the diagonal does not
-      if (L && U && !same(x - 1, y - 1)) mask |= 16;
-      if (R && U && !same(x + 1, y - 1)) mask |= 32;
-      if (L && D && !same(x - 1, y + 1)) mask |= 64;
-      if (R && D && !same(x + 1, y + 1)) mask |= 128;
+      if (L && U && !sameColor(c, x - 1, y - 1)) mask |= 16;
+      if (R && U && !sameColor(c, x + 1, y - 1)) mask |= 32;
+      if (L && D && !sameColor(c, x - 1, y + 1)) mask |= 64;
+      if (R && D && !sameColor(c, x + 1, y + 1)) mask |= 128;
       // touchdown squash: flatten a touch toward the floor, then spring back
       const sq = landSquash(cell, dt) * 0.08;
       tmp.scale.set(1 + sq * 0.5, 1 - sq, 1);
@@ -2946,7 +2972,7 @@ function syncBlocks(t: number, dt: number) {
         xMask.setX(nx++, mask);
       } else {
         blocks.setMatrixAt(nb, tmp.matrix);
-        tmpColor.set(colorOf(cell.color, y));
+        tmpColor.copy(cssColor(colorOf(cell.color, y)));
         // red warning tint on a shaking block that would land on the hero (the scanDanger stack)
         if (wob >= 0 && x === mx && y < my && y >= dangerTop && dangerTop >= 0) tmpColor.lerp(DANGER_TINT, 0.3 + Math.sin(t * 16) * 0.12);
         blocks.setColorAt(nb, tmpColor);
@@ -2954,15 +2980,15 @@ function syncBlocks(t: number, dt: number) {
       }
     }
   }
-  boardShadow.count = ns;
-  boardShadow.instanceMatrix.needsUpdate = true;
-  blockMask.needsUpdate = true;
-  xMask.needsUpdate = true;
-  for (const [mesh, n] of [[blocks, nb], [xBlocks, nx], [capsules, nc], [capInk, nc], [friends, nf], [clocks, nk]] as const) {
-    mesh.count = n;
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }
+  uploadInstances(boardShadow, ns);
+  uploadInstances(blocks, nb);
+  if (nb) uploadRange(blockMask, nb);
+  uploadInstances(xBlocks, nx);
+  if (nx) uploadRange(xMask, nx);
+  uploadInstances(capsules, nc);
+  uploadInstances(capInk, nc);
+  uploadInstances(friends, nf);
+  uploadInstances(clocks, nk);
 }
 
 function syncMole(t: number, dt: number) {
@@ -3143,14 +3169,15 @@ function syncSky(t: number, dt: number) {
   }
   p.needsUpdate = true;
   const snowMat = snow.material as THREE.PointsMaterial;
-  snowMat.color.set('#ffffff').lerp(tmpColor.set(CRYSTAL_GLOW[moodBand()]), under * 0.7);
+  snowMat.color.setRGB(1, 1, 1).lerp(cssColor(CRYSTAL_GLOW[moodBand()]), under * 0.7);
   snowMat.size = THREE.MathUtils.lerp(0.13, 0.07, under);
   snowMat.opacity = THREE.MathUtils.lerp(0.9, 0.55 + Math.sin(t * 3) * 0.15, under);
 }
 
 function syncParticles(dt: number) {
-  particles = particles.filter((p) => (p.life -= dt) > 0);
-  particles.forEach((p, i) => {
+  agePool(particles, dt);
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
     p.vy -= 16 * dt;
     p.x += p.vx * dt;
     p.y += p.vy * dt;
@@ -3161,11 +3188,9 @@ function syncParticles(dt: number) {
     tmp.scale.setScalar(Math.min(1, p.life * 2));
     tmp.updateMatrix();
     parts.setMatrixAt(i, tmp.matrix);
-    parts.setColorAt(i, tmpColor.set(p.color));
-  });
-  parts.count = particles.length;
-  parts.instanceMatrix.needsUpdate = true;
-  if (parts.instanceColor) parts.instanceColor.needsUpdate = true;
+    parts.setColorAt(i, cssColor(p.color));
+  }
+  uploadInstances(parts, particles.length);
 }
 
 // Oblique view like the mockup's raised slabs: shear the projection by depth so block fronts
@@ -3204,20 +3229,26 @@ function syncCamera(dt: number) {
   camera.lookAt(4 + lean * 0.4 + cx, camY + cy, 0);
   applyOblique();
 
-  // deeper levels get darker; sun follows the camera
+  // deeper levels get darker (block colours stay fixed at every depth; the backdrop carries the
+  // mood); sun follows the camera. The tints change only with the band, so they are set then.
   const lv = moodBand();
-  hemi.intensity = 1.8; // block colours stay fixed at every depth; the backdrop carries the mood
-  sun.intensity = 2.6;
-  farMat.color.set(CAVE_TINT[lv]);
-  for (const mat of cliffMats) mat.color.set(CAVE_TINT[lv]);
-  blockMat.color.setScalar(1.3 * BOARD_LIGHT[lv]);
-  xMat.color.set(XBLOCK_COLOR).multiplyScalar(1.25 * BOARD_LIGHT[lv]);
+  if (lv !== moodShown) {
+    moodShown = lv;
+    farMat.color.set(CAVE_TINT[lv]);
+    for (const mat of cliffMats) mat.color.set(CAVE_TINT[lv]);
+    blockMat.color.setScalar(1.3 * BOARD_LIGHT[lv]);
+    xMat.color.set(XBLOCK_COLOR).multiplyScalar(1.25 * BOARD_LIGHT[lv]);
+  }
   sun.position.set(-4, camY + 12, 14);
   sun.target.position.set(4, camY, 0);
   const bg = camY > -SKY_ROWS - 4 ? '#163d7a' : '#12336a';
-  (scene.background as THREE.Color).set(bg);
-  scene.fog!.color.set(bg);
+  if (bg !== bgShown) {
+    bgShown = bg;
+    (scene.background as THREE.Color).set(bg);
+    scene.fog!.color.set(bg);
+  }
 }
+let moodShown = -1, bgShown = '';
 
 const project = new THREE.Vector3();
 let comboLabel = '', comboLabelN = -1;
@@ -3232,7 +3263,7 @@ function buildVignettes() {
 }
 function drawFx(t: number, dt: number) {
   fxCtx.clearRect(0, 0, W, H);
-  floaters = floaters.filter((f) => (f.life -= dt) > 0);
+  agePool(floaters, dt);
   fxCtx.textAlign = 'center';
   fxCtx.textBaseline = 'middle';
   fxCtx.lineJoin = 'round';
@@ -3483,6 +3514,7 @@ function syncMedalLine(dt: number) {
 }
 // HUD text is rewritten every frame: touch the DOM only when it changes
 function setText(e: HTMLElement, t: string) { if (e.textContent !== t) e.textContent = t; }
+let airFillShown = '';
 function drawHud(dt = 0) {
   syncMedalLine(dt);
   if (game.lives !== shownLives) {
@@ -3508,7 +3540,9 @@ function drawHud(dt = 0) {
   setText(airText, game.stage.air.kind === 'swing' ? `공기 ${air}% · 망치 ${game.stats.swings}`
     : clock ? `${Math.max(0, game.time - game.stats.clockSaved).toFixed(1)}초 (시계 -${game.stats.clockSaved}초)`
     : `공기 ${air}%`);
-  airFill.style.width = `${(Math.max(0, game.air) / AIR_MAX) * 100}%`;
+  // a style write invalidates layout: only when the bar moves a visible step (0.1%)
+  const fill = `${((Math.max(0, game.air) / AIR_MAX) * 100).toFixed(1)}%`;
+  if (fill !== airFillShown) { airFillShown = fill; airFill.style.width = fill; }
   if (air !== shownAir) { shownAir = air; airEl.setAttribute('aria-valuenow', String(air)); } // no per-frame attribute write
   airRow.classList.toggle('low', game.air < AIR_WARNING);
 }
@@ -3522,8 +3556,31 @@ function wobbleTicks(dt: number) {
   wobbleTickT = 0.25 - wobbleNear * 0.15;
 }
 
+// Held keys and buffered presses, run by the logic before each fixed tick (update's beforeTick), so
+// the repeat rate and the retry windows count game time whatever the frame rate (a 30 fps phone
+// and a 144 Hz monitor step alike), and hold still with the world during a hitstop or a pause.
+// Fresh presses still act at once (pressDir / pressDrill, from the key and touch handlers).
+function inputTick() {
+  for (const [dir, wait] of held) {
+    if (dir === 'up' || dir === 'down') continue;
+    const next = wait - TICK;
+    if (next <= 0) { move(game, dir); held.set(dir, MOVE_RATE); }
+    else held.set(dir, next);
+  }
+  if (drillHeld) tryDrill(true);
+  else if (drillBuf > 0) {
+    if (moleAt() !== drillBufAt) drillBuf = 0; // moved or turned: the press was for the old target
+    else { drillBuf = Math.max(0, drillBuf - TICK); tryDrill(true); }
+  }
+  if (moveBuf > 0) {
+    moveBuf = Math.max(0, moveBuf - TICK);
+    if (game.mole.facing !== moveBufDir || tryMove(moveBufDir)) moveBuf = 0; // turned away, or stepped
+  }
+}
+
 let prev = performance.now();
 function frame(now: number) {
+  const cost0 = performance.now();
   const dt = Math.min(0.05, (now - prev) / 1000);
   // ease the framing between play (tight on phones) and title/results (wide); cliffs refit to it
   const wantWide = !started || game.state !== 'playing' ? 1 : 0;
@@ -3549,25 +3606,8 @@ function frame(now: number) {
   const t = now / 1000;
 
   if (!paused) {
-    for (const [dir, wait] of held) {
-      if (dir === 'up' || dir === 'down') continue;
-      const next = wait - dt;
-      if (next <= 0) { move(game, dir); held.set(dir, MOVE_RATE); }
-      else held.set(dir, next);
-    }
-    // buffers count game time: a hitstop must not eat a press made during it
-    const simDt = hitStop > 0 || !started ? 0 : dt;
-    if (drillHeld) tryDrill(true);
-    else if (drillBuf > 0) {
-      if (moleAt() !== drillBufAt) drillBuf = 0; // moved or turned: the press was for the old target
-      else { drillBuf = Math.max(0, drillBuf - simDt); tryDrill(true); }
-    }
-    if (moveBuf > 0) {
-      moveBuf = Math.max(0, moveBuf - simDt);
-      if (game.mole.facing !== moveBufDir || tryMove(moveBufDir)) moveBuf = 0; // turned away, or stepped
-    }
     if (hitStop > 0) hitStop = Math.max(0, hitStop - dt); // the world holds; effects keep animating
-    else if (started) update(game, dt);
+    else if (started) update(game, dt, inputTick);
     recordGhost();
   }
   for (const e of game.events) handleEvent(e);
@@ -3592,8 +3632,38 @@ function frame(now: number) {
   renderer.render(scene, camera);
   drawFx(t, vdt);
   drawHud(vdt);
+  if (import.meta.env.DEV) perfSample(performance.now() - cost0);
   requestAnimationFrame(frame);
 }
+
+// Dev hook for the headless playtests (scripts/e2e.mjs): state, start, and a perf sampler. The
+// sampler keeps the JS cost of each frame (sim + sync + draw calls, not GPU time) so a change to
+// the per-frame code can be compared before/after with `npm run e2e scripts/scenarios/perf.js`.
+const perfCosts: number[] = [];
+function perfSample(ms: number) {
+  perfCosts.push(ms);
+  if (perfCosts.length > 600) perfCosts.shift();
+}
+if (import.meta.env.DEV) (window as unknown as { __dd: unknown }).__dd = {
+  get game() { return game; },
+  get started() { return started; },
+  get paused() { return paused; },
+  renderer, scene, camera,
+  start: () => start(),
+  perfReset: () => { perfCosts.length = 0; },
+  perf: () => {
+    const s = [...perfCosts].sort((a, b) => a - b);
+    const q = (k: number) => +(s[Math.min(s.length - 1, Math.floor(k * s.length))] ?? 0).toFixed(3);
+    const info = renderer.info;
+    return {
+      frames: s.length, avgMs: +(s.reduce((a, b) => a + b, 0) / Math.max(1, s.length)).toFixed(3),
+      p50Ms: q(0.5), p95Ms: q(0.95), maxMs: q(1),
+      calls: info.render.calls, triangles: info.render.triangles,
+      geometries: info.memory.geometries, textures: info.memory.textures, programs: info.programs?.length ?? 0,
+      fxCanvas: [fx.width, fx.height], glCanvas: [canvas.width, canvas.height],
+    };
+  },
+};
 
 reset();
 resize();

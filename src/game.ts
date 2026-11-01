@@ -833,7 +833,9 @@ function clearLevel(g: Game, row: number) {
   g.events.push({ type: 'levelclear', y: row, bonus });
 }
 
-export function update(g: Game, dt: number): void {
+// beforeTick: the renderer's held-key repeat and input buffers, run at the start of every fixed
+// tick so they count game time instead of frames (and may end the run: then no tick follows).
+export function update(g: Game, dt: number, beforeTick?: () => void): void {
   if (g.state !== 'playing') return;
   g.time += dt;
   g.mole.invuln = Math.max(0, g.mole.invuln - dt);
@@ -841,6 +843,8 @@ export function update(g: Game, dt: number): void {
   g.acc += dt;
   while (g.acc >= TICK && g.state === 'playing') {
     g.acc -= TICK;
+    beforeTick?.();
+    if (g.state !== 'playing') break;
     tick(g);
   }
 }

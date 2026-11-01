@@ -1094,3 +1094,20 @@ describe('tempo', () => {
     expect(levelAirTempo(g)).toBeLessThan(1);
   });
 });
+
+describe('update beforeTick (input runs on the fixed tick)', () => {
+  it('runs once per logic tick, however the frame time is cut', () => {
+    const coarse = createGame(5), fine = createGame(5);
+    let a = 0, b = 0;
+    update(coarse, 10 * TICK + 1e-6, () => a++); // one long frame (a 6 fps hitch)
+    for (let i = 0; i < 40; i++) update(fine, TICK / 4 + 1e-9, () => b++); // 240 Hz frames, same span
+    expect(a).toBe(10);
+    expect(b).toBe(10);
+  });
+  it('stops the ticks once it ends the run (a swing that used the last air)', () => {
+    const g = createGame(5);
+    let calls = 0;
+    update(g, 3 * TICK + 1e-6, () => { calls++; g.state = 'lost'; });
+    expect(calls).toBe(1);
+  });
+});

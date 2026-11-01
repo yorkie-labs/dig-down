@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 
@@ -42,12 +42,24 @@ const serviceWorker = (): Plugin => ({
   },
 });
 
+// public/models/ holds local-only copies: Polyfork GLBs (licence: hotlink the CDN, never
+// redistribute) and the Tripo-derived puppy (non-commercial). Vite copies all of public/ into dist,
+// so a local build would ship them; drop the folder once the bundle is written (scary-island does
+// the same). CI never has them (gitignored), this guards a hand-made build.
+const dropLocalModels = (): Plugin => ({
+  name: 'drop-local-models',
+  apply: 'build',
+  closeBundle() {
+    rmSync(resolve(__dirname, 'dist/models'), { recursive: true, force: true });
+  },
+});
+
 // GitHub Pages serves the site from /<repo>/: the deploy workflow sets VITE_BASE to that path.
 // Asset URLs in the code are page-relative, so they follow the base too.
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   define: { __BUILD__: JSON.stringify(BUILD) },
-  plugins: [versionFile(), serviceWorker()],
+  plugins: [versionFile(), serviceWorker(), dropLocalModels()],
   build: {
     rollupOptions: {
       input: {
