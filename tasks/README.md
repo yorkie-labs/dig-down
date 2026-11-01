@@ -18,3 +18,4 @@
 | 2026-10-31 | Deploy (GitHub Pages) | [todo](20261031-deploy-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
 | 2026-10-31 | Playtest feedback (긴장감·속도 리듬·타격감) | [todo](20261031-playtest-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
 | 2026-11-01 | Engine review (scary-island 비교·성능·E2E) | [todo](20261101-engine-review-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |
+| 2026-11-01 | Backdrop review (배경 3안 비교) | [todo](20261101-backdrop-todo.md) | [lessons](20261025-dig-prototype-lessons.md) |

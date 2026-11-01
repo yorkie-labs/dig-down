@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import './loading'; // first: hooks the loading manager before any texture starts loading
 import { startVersionCheck } from './version';
 import { addProps } from './props3d';
+import { addIceWalls } from './backdrop3d';
 import {
   Badge, BADGES, Cosmetic, COSMETICS, cosmeticForBadge, CosmeticSlot, dailyHistory, dailyOf, dailyRecord, dailyShareText, equippedCosmetics,
   isUnlocked, LiveStats, loadProgress, Medal, medalMetric, medalStars, maxStars, nextStageAfter, Progress, recordRun, RunResult, saveProgress,
@@ -99,6 +100,9 @@ const wx = (x: number) => x;
 const wy = (y: number) => -y;
 
 // ---- painted backdrop (style A) ----
+// Backdrop review (20261101): ?bg=muted keeps the painting at lower saturation and contrast,
+// ?bg=3d swaps the shaft walls for low-poly toon rock (src/backdrop3d.ts). Default: the painting.
+const BG = new URLSearchParams(location.search).get('bg');
 // Everything behind and beside the 9 columns is drawn into canvas textures in the same ink and
 // gouache rules as the blocks, at three depths so it parallaxes as the camera descends.
 const shaftH = 6000; // tall enough for Aurora's 700m and long endless runs
@@ -179,6 +183,27 @@ holeTex.colorSpace = THREE.SRGBColorSpace;
 holeTex.wrapS = holeTex.wrapT = THREE.MirroredRepeatWrapping;
 holeTex.minFilter = THREE.LinearMipmapLinearFilter;
 const farMat = new THREE.MeshBasicMaterial({ map: holeTex, color: '#6a7cab' }); // darker than the rock: a hole, not a window
+// ?bg=muted: pull the painting toward one low-saturation navy, so its brush detail and white
+// highlights stop competing with the board (linear-space mix after the map is applied)
+function mutePainting(mat: THREE.MeshBasicMaterial, sat: number, keep: number) {
+  mat.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>
+      float lum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+      diffuseColor.rgb = mix(vec3(lum), diffuseColor.rgb, ${sat.toFixed(2)});
+      diffuseColor.rgb = mix(vec3(0.05, 0.08, 0.2) * (0.6 + lum), diffuseColor.rgb, ${keep.toFixed(2)});`);
+  };
+}
+if (BG === 'muted') mutePainting(farMat, 0.4, 0.5);
+// ?bg=3d: the hole shows plain deep navy (the walls carry the rock)
+// (a dark wash texture, not a bare colour: the depth tint sets farMat.color and multiplies it)
+if (BG === '3d') farMat.map = canvasTex(4, 64, (g) => {
+  const grad = g.createLinearGradient(0, 0, 0, 64);
+  grad.addColorStop(0, '#24366a');
+  grad.addColorStop(0.5, '#1c2b58');
+  grad.addColorStop(1, '#24366a');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 4, 64);
+}, shaftH / 30, 1);
 const far = new THREE.Mesh(new THREE.PlaneGeometry(26, shaftH), farMat);
 placeDeep(far, 4, shaftMidY, -14);
 scene.add(far);
@@ -186,9 +211,9 @@ scene.add(far);
 // Mid layer: the painted ice cliffs, cropped straight from the style-A mockup
 // (tools/crop_textures.py) and tiled down the shaft.
 const CLIFF_W = 2.15; // minimum cells of cliff per side, as framed in the mockup
-const cliffMats: THREE.MeshBasicMaterial[] = [];
+const cliffMats: { color: THREE.Color }[] = [];
 const cliffs: { mesh: THREE.Mesh; tex: THREE.Texture; side: number }[] = [];
-for (const side of [-1, 1]) {
+for (const side of BG === '3d' ? [] : [-1, 1]) {
   // Seamless rock-and-snow tiles (aurora-free, ends cross-faded); mirroring the full strip made
   // the aurora read as a kaleidoscope. The right side is phase-shifted so the sides don't match.
   const tex = new THREE.TextureLoader().load(side < 0 ? 'textures/cliff-left-tile.png' : 'textures/cliff-right-tile.png', () => fitCliffs());
@@ -196,6 +221,7 @@ for (const side of [-1, 1]) {
   tex.wrapT = THREE.RepeatWrapping;
   tex.offset.y = side < 0 ? 0 : 0.43;
   const mat = new THREE.MeshBasicMaterial({ map: tex, fog: false });
+  if (BG === 'muted') mutePainting(mat, 0.45, 0.55);
   cliffMats.push(mat);
   const cliff = new THREE.Mesh(new THREE.PlaneGeometry(1, shaftH), mat);
   scene.add(cliff);
@@ -538,6 +564,10 @@ scene.add(crystalGlow, crystals);
 const props = new URLSearchParams(location.search).get('props') !== '0'
   ? addProps({ scene, ramp, ink: INK, shaftTop, yOfDepth: (depth) => wy(SKY_ROWS - 1 + depth), placeDeep })
   : null;
+
+// ?bg=3d walls (tinted per band with the rest of the backdrop through cliffMats)
+const iceWalls = BG === '3d' ? addIceWalls({ scene, ramp, ink: INK, shaftTop, edgeL: -0.55, edgeR: 8.55, placeDeep }) : null;
+if (iceWalls) cliffMats.push(iceWalls.material);
 
 // Shaft frame: a navy ice rim down both board edges. Hides the slab side faces the oblique view
 // shows on the right edge only (a lopsided coloured sliver) and closes the board like a picture.
@@ -1841,6 +1871,7 @@ function resize() {
   fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   resetFxText(); // resizing the canvas reset the context state
   buildVignettes();
+  iceWalls?.setResolution(W, H);
   camera.aspect = W / H;
   camera.updateProjectionMatrix();
   baseProjection.copy(camera.projectionMatrix);
@@ -3239,6 +3270,7 @@ function syncCamera(dt: number) {
     blockMat.color.setScalar(1.3 * BOARD_LIGHT[lv]);
     xMat.color.set(XBLOCK_COLOR).multiplyScalar(1.25 * BOARD_LIGHT[lv]);
   }
+  iceWalls?.update(camY);
   sun.position.set(-4, camY + 12, 14);
   sun.target.position.set(4, camY, 0);
   const bg = camY > -SKY_ROWS - 4 ? '#163d7a' : '#12336a';
