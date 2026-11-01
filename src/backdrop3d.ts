@@ -1,4 +1,4 @@
-// The shaft walls as low-poly 3D ice rock (the painted cliff tiles stay behind ?bg=paint),
+// The shaft walls as low-poly 3D ice rock (they replaced the painted cliff tiles, 2026-11-01),
 // in the same language as the Polyfork props: flat-shaded facets on the shared two-tone toon ramp,
 // snow on the facets that face up, and inked creases at a constant screen width.
 // One segment geometry per side, SEG units tall and periodic in y, leapfrogged down the shaft by

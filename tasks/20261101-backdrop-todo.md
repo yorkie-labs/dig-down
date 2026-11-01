@@ -17,7 +17,10 @@
   - 옛 그림 절벽은 `?bg=paint`로 남김(비교용), 톤 다운 안(`?bg=muted`)은 진단용이라 제거
   - 기본값에서는 절벽 그림 텍스처를 받지 않음. `textures/cliff-*`는 PWA 프리캐시에서 제외(~670KB, `cliff-left/right.png`는 원래 미사용)
   - 확인: smoke·input 시나리오 통과, 기본값/`?bg=paint` 130m 화면 정상, `npm test`·`npm run build` 통과
-- [ ] 그림 절벽 코드·텍스처 완전 삭제는 사용자가 3D로 확정한 뒤
+- [x] 사용자 확정("3D 전환하자"): 그림 절벽 완전 삭제
+  - 코드: `?bg=paint` 분기, 그림 절벽 메시·`fitCliffs`, 안 쓰이던 `farTex`(시작마다 512px 캔버스를 그리던 죽은 코드). `cliffMats` → `wallMats`
+  - 파일: `public/textures/cliff-{left,right}{,-tile}.png` 4장(~670KB), `tools/crop_textures.py`의 절벽 저장 줄과 `seamless()`, 프리캐시 예외
+  - 확인: 2560×1080 초광폭에서도 암벽이 화면 끝까지 닿음(타이틀·130m), smoke·input 시나리오 통과, `npm test`·`npm run build` 통과, `dist/textures`에 절벽 없음
 
 ## 관찰
 - 데스크톱은 배경이 화면 절반 이상. 휴대폰은 플레이 중 보드가 폭을 거의 채워 배경은 판 구멍·타이틀에서만 보임

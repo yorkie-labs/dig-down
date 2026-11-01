@@ -1,6 +1,6 @@
 // SPIKE: 3D renderer for the same game logic, in style A "Ink & Gouache Storybook"
 // (tasks/20261028-style-a-todo.md): flat gouache blocks with one constant ink line around each
-// chunk, a painted ice-cave backdrop with parallax cliffs and icicles, and a flat 2D hero.
+// chunk, an ice-cave backdrop (low-poly toon ice walls, src/backdrop3d.ts), and a flat 2D hero.
 // Input/HUD code is copied from main.ts on purpose (spike, not shared yet).
 import './style.css'; // legacy base + design tokens
 import './game3d.css'; // the 3D page's styles: after style.css, so they override it
@@ -100,10 +100,8 @@ const wx = (x: number) => x;
 const wy = (y: number) => -y;
 
 // ---- backdrop (style A) ----
-// Shaft walls: low-poly toon ice rock (src/backdrop3d.ts), in the props' language, since the
-// backdrop review (tasks/20261101-backdrop-todo.md): the painted cliff tiles competed with the
-// board. ?bg=paint brings the painted cliffs back for comparison.
-const PAINTED = new URLSearchParams(location.search).get('bg') === 'paint';
+// Shaft walls: low-poly toon ice rock (src/backdrop3d.ts), in the props' language. They replaced
+// the painted cliff tiles, which competed with the board (tasks/20261101-backdrop-todo.md).
 // Everything behind and beside the 9 columns is drawn into canvas textures in the same ink and
 // gouache rules as the blocks, at three depths so it parallaxes as the camera descends.
 const shaftH = 6000; // tall enough for Aurora's 700m and long endless runs
@@ -135,52 +133,9 @@ function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => 
   return t;
 }
 
-// Far layer: the painted aurora night seen through the holes in the board — mid-blue brush
-// strokes with green aurora streaks, lighter than before to match the mockup's value.
-const farTex = canvasTex(512, 512, (g) => {
-  const grad = g.createLinearGradient(0, 0, 0, 512);
-  grad.addColorStop(0, '#22579f');
-  grad.addColorStop(0.5, '#1b4b91');
-  grad.addColorStop(1, '#22579f');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 512, 512);
-  // brushy vertical strokes
-  for (let k = 0; k < 260; k++) {
-    const x = rnd() * 512, y = rnd() * 512, len = 30 + rnd() * 90;
-    g.strokeStyle = `rgba(${90 + rnd() * 80},${150 + rnd() * 80},255,${0.06 + rnd() * 0.08})`;
-    g.lineWidth = 4 + rnd() * 10;
-    g.beginPath();
-    g.moveTo(x, y);
-    g.lineTo(x + (rnd() - 0.5) * 20, (y + len) % 512);
-    g.stroke();
-  }
-  // aurora streaks
-  for (let k = 0; k < 40; k++) {
-    const x = 60 + rnd() * 390, y = rnd() * 512;
-    g.strokeStyle = `rgba(${60 + rnd() * 60},${220 + rnd() * 35},${170 + rnd() * 60},${0.08 + rnd() * 0.1})`;
-    g.lineWidth = 6 + rnd() * 16;
-    g.beginPath();
-    g.moveTo(x, y);
-    g.lineTo(x + (rnd() - 0.5) * 30, y + 60 + rnd() * 120);
-    g.stroke();
-  }
-  for (let k = 0; k < 40; k++) {
-    g.fillStyle = 'rgba(255,255,255,0.7)';
-    g.fillRect(rnd() * 512, rnd() * 512, 2, 2);
-  }
-}, shaftH / 14, 2); // soft wash: 2× is plenty
-// square texels: the 512px tile spans 14 units both ways (it was stretched 1.8x horizontally)
-farTex.wrapS = THREE.RepeatWrapping;
-farTex.repeat.x = 26 / 14;
 // Seen through the holes: a dark navy wash behind the far ice wall. A wash texture rather than a
 // bare colour, since the depth tint sets farMat.color and multiplies the map.
-// ?bg=paint: the painted cliff, softened and dimmed so it sits behind the board.
-const holeTex = PAINTED ? new THREE.TextureLoader().load('textures/cliff-left-tile.png', (t) => {
-  const { width, height } = t.image as HTMLImageElement;
-  const tileW = 4.5; // world units per repeat: big soft rocks
-  t.repeat.set(26 / tileW, shaftH / (tileW * (height / width)));
-  t.needsUpdate = true;
-}) : canvasTex(4, 64, (g) => {
+const holeTex = canvasTex(4, 64, (g) => {
   const grad = g.createLinearGradient(0, 0, 0, 64);
   grad.addColorStop(0, '#24366a');
   grad.addColorStop(0.5, '#1c2b58');
@@ -188,48 +143,15 @@ const holeTex = PAINTED ? new THREE.TextureLoader().load('textures/cliff-left-ti
   g.fillStyle = grad;
   g.fillRect(0, 0, 4, 64);
 }, shaftH / 30, 1);
-if (PAINTED) {
-  holeTex.colorSpace = THREE.SRGBColorSpace;
-  holeTex.wrapS = holeTex.wrapT = THREE.MirroredRepeatWrapping;
-  holeTex.minFilter = THREE.LinearMipmapLinearFilter;
-}
 const farMat = new THREE.MeshBasicMaterial({ map: holeTex, color: '#6a7cab' }); // darker than the rock: a hole, not a window
 const far = new THREE.Mesh(new THREE.PlaneGeometry(26, shaftH), farMat);
 placeDeep(far, 4, shaftMidY, -14);
 scene.add(far);
 
-// Mid layer: the painted ice cliffs, cropped straight from the style-A mockup
-// (tools/crop_textures.py) and tiled down the shaft.
-const CLIFF_W = 2.15; // minimum cells of cliff per side, as framed in the mockup
-const cliffMats: { color: THREE.Color }[] = [];
-const cliffs: { mesh: THREE.Mesh; tex: THREE.Texture; side: number }[] = [];
-for (const side of PAINTED ? [-1, 1] : []) {
-  // Seamless rock-and-snow tiles (aurora-free, ends cross-faded); mirroring the full strip made
-  // the aurora read as a kaleidoscope. The right side is phase-shifted so the sides don't match.
-  const tex = new THREE.TextureLoader().load(side < 0 ? 'textures/cliff-left-tile.png' : 'textures/cliff-right-tile.png', () => fitCliffs());
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.offset.y = side < 0 ? 0 : 0.43;
-  const mat = new THREE.MeshBasicMaterial({ map: tex, fog: false });
-  cliffMats.push(mat);
-  const cliff = new THREE.Mesh(new THREE.PlaneGeometry(1, shaftH), mat);
-  scene.add(cliff);
-  cliffs.push({ mesh: cliff, tex, side });
-}
-// Widen the cliffs to reach the screen edge (bare backdrop strips at the edges looked unfinished),
-// keeping the painted texel aspect so wider cliffs just show bigger rocks.
-function fitCliffs() {
-  const halfW = camDistance() * Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * camera.aspect;
-  const w = Math.max(CLIFF_W, halfW - 4.5 + 0.8);
-  for (const { mesh, tex, side } of cliffs) {
-    mesh.scale.x = w;
-    placeDeep(mesh, side < 0 ? -0.5 - w / 2 : 8.5 + w / 2, shaftMidY, -0.6);
-    const img = tex.image as HTMLImageElement | undefined;
-    if (img?.width) tex.repeat.set(1, shaftH / (w * (img.height / img.width)));
-  }
-}
+// Backdrop materials tinted per depth band (CAVE_TINT, in syncCamera): the ice walls, added below
+const wallMats: { color: THREE.Color }[] = [];
 
-// ---- surface scene (painted like the cliffs: gouache fills, inked edges) ----
+// ---- surface scene (gouache fills, inked edges) ----
 const surfaceTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, superMax?: number) => {
   const t = canvasTex(w, h, draw, 1, superMax);
   t.wrapT = THREE.ClampToEdgeWrapping;
@@ -345,7 +267,7 @@ placeDeep(nearRange, 4, shaftTop + 0.85, -5);
 scene.add(farRange, nearRange);
 
 // Snowfield the board is set into: wavy inked top edge just under the hero's feet, covering the
-// top of the cliffs at the sides. It sits behind the board and the hero (the old snow box was in
+// top of the ice walls at the sides. It sits behind the board and the hero (the old snow box was in
 // front of the hero and hid everything but its head).
 const GROUND_H = 4; // world units; the painted top edge sits ~14% down the texture
 const groundTex = surfaceTex(1024, 192, (g) => {
@@ -554,9 +476,9 @@ const props = new URLSearchParams(location.search).get('props') !== '0'
   ? addProps({ scene, ramp, ink: INK, shaftTop, yOfDepth: (depth) => wy(SKY_ROWS - 1 + depth), placeDeep })
   : null;
 
-// ice walls (tinted per band with the rest of the backdrop through cliffMats)
-const iceWalls = !PAINTED ? addIceWalls({ scene, ramp, ink: INK, shaftTop, edgeL: -0.55, edgeR: 8.55, placeDeep }) : null;
-if (iceWalls) cliffMats.push(...iceWalls.materials);
+// shaft walls either side of the board, and the far wall seen through its holes
+const iceWalls = addIceWalls({ scene, ramp, ink: INK, shaftTop, edgeL: -0.55, edgeR: 8.55, placeDeep });
+wallMats.push(...iceWalls.materials);
 
 // Shaft frame: a navy ice rim down both board edges. Hides the slab side faces the oblique view
 // shows on the right edge only (a lopsided coloured sliver) and closes the board like a picture.
@@ -1860,11 +1782,10 @@ function resize() {
   fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   resetFxText(); // resizing the canvas reset the context state
   buildVignettes();
-  iceWalls?.setResolution(W, H);
+  iceWalls.setResolution(W, H);
   camera.aspect = W / H;
   camera.updateProjectionMatrix();
   baseProjection.copy(camera.projectionMatrix);
-  fitCliffs();
 }
 
 const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
@@ -3255,11 +3176,11 @@ function syncCamera(dt: number) {
   if (lv !== moodShown) {
     moodShown = lv;
     farMat.color.set(CAVE_TINT[lv]);
-    for (const mat of cliffMats) mat.color.set(CAVE_TINT[lv]);
+    for (const mat of wallMats) mat.color.set(CAVE_TINT[lv]);
     blockMat.color.setScalar(1.3 * BOARD_LIGHT[lv]);
     xMat.color.set(XBLOCK_COLOR).multiplyScalar(1.25 * BOARD_LIGHT[lv]);
   }
-  iceWalls?.update(camY);
+  iceWalls.update(camY);
   sun.position.set(-4, camY + 12, 14);
   sun.target.position.set(4, camY, 0);
   const bg = camY > -SKY_ROWS - 4 ? '#163d7a' : '#12336a';
@@ -3603,12 +3524,11 @@ let prev = performance.now();
 function frame(now: number) {
   const cost0 = performance.now();
   const dt = Math.min(0.05, (now - prev) / 1000);
-  // ease the framing between play (tight on phones) and title/results (wide); cliffs refit to it
+  // ease the framing between play (tight on phones) and title/results (wide)
   const wantWide = !started || game.state !== 'playing' ? 1 : 0;
   if (Math.abs(wantWide - wideShot) > 1e-3) {
     wideShot += (wantWide - wideShot) * Math.min(1, dt * 3);
     if (Math.abs(wantWide - wideShot) <= 1e-3) wideShot = wantWide;
-    if (camera.aspect < 0.8) fitCliffs();
   }
   props?.update(dt, wy(view.y)); // penguin life (wall time, also on the title) + distance culling
   // Music follows the pace (playtest: tension): relaxed after a clear row, pressing near the next.

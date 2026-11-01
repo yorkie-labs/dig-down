@@ -48,21 +48,7 @@ def resize(arr, size):
     return arr[ys][:, xs]
 
 
-def seamless(arr, overlap):
-    """Cross-fade the last `overlap` rows into the first ones so the strip tiles vertically."""
-    h = arr.shape[0] - overlap
-    out_arr = arr[:h].copy()
-    t = np.linspace(0, 1, overlap, dtype=np.float32)[:, None, None]
-    out_arr[:overlap] = arr[:overlap] * t + arr[h:h + overlap] * (1 - t)
-    return out_arr
-
-
-# painted ice cliffs beside the shaft: the full strips (with aurora) for the surface, and
-# aurora-free rock/snow sections made seamless for tiling down the shaft
-save(crop(160, 100, 282, 970), "cliff-left.png")
-save(crop(808, 100, 932, 970), "cliff-right.png")
-save(seamless(crop(160, 380, 282, 970), 90), "cliff-left-tile.png")
-save(seamless(crop(808, 380, 932, 970), 90), "cliff-right-tile.png")
+# (the painted ice-cliff crops were dropped 2026-11-01: the shaft walls are 3D now, src/backdrop3d.ts)
 
 # mean colour of each sampled cell interior, for matching the in-game palette
 for name, (x0, y0, x1, y1) in {"blue": (524, 910, 574, 960), "teal": (467, 595, 517, 645),

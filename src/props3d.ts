@@ -26,7 +26,7 @@ export interface PropDeps {
 const DIR = 'https://polyfork.dev/cdn/';
 const NIGHT = new THREE.Color('#aebfe2');
 // What each 100m band shows (pools, landmarks, seeded layout) lives in propsCatalog.ts.
-const SHAFT_BANDS = 15; // dressed down to 1500m (endless runs past that keep the painted cliffs)
+const SHAFT_BANDS = 15; // dressed down to 1500m (endless runs past that keep the bare ice walls)
 // Cliff edges the xOffsets count out from. The board spans -0.5..8.5, but the right-hand props
 // read a cell further out (as the old hand placement had them), so that edge is 9.5: our tuning.
 const EDGE_L = -0.5, EDGE_R = 9.5;

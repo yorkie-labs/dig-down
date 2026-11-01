@@ -4,7 +4,8 @@
 // Needs a dev server (the DEV-only window.__dd hook): `npm run dev -- --port 5188`, then
 //   node scripts/e2e.mjs scripts/scenarios/smoke.js [outDir]
 // Env: GAME_URL (default http://localhost:5188/3d.html; query string = the scene, e.g. ?depth=120),
-//      MOBILE=1 (iPhone 15 Pro viewport, DPR 3, touch), CHROME (browser binary).
+//      MOBILE=1 (iPhone 15 Pro viewport, DPR 3, touch), VIEWPORT=WxH (desktop size, default
+//      1100x800), CHROME (browser binary).
 import puppeteer, { KnownDevices } from 'puppeteer-core';
 import { readFileSync, mkdirSync } from 'node:fs';
 
@@ -19,7 +20,10 @@ const browser = await puppeteer.launch({
 });
 const page = await browser.newPage();
 if (process.env.MOBILE) await page.emulate(KnownDevices['iPhone 15 Pro']);
-else await page.setViewport({ width: 1100, height: 800 });
+else {
+  const [w, h] = (process.env.VIEWPORT ?? '1100x800').split('x').map(Number);
+  await page.setViewport({ width: w, height: h });
+}
 const logs = [];
 // navigator.vibrate before a tap is Chrome's user-activation rule, not a bug (the game guards it)
 const NOISE = /navigator\.vibrate/;
