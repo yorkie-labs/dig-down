@@ -20,5 +20,5 @@
   - 서비스 워커는 빌드 때 `src/sw-template.js`에 빌드 id와 프리캐시 목록(실제로 쓴 파일 39개, 약 9MB)을 넣어 `dist/sw.js` 생성
   - 캐시 전략: 페이지는 네트워크 우선, version.json은 항상 네트워크, Polyfork CDN은 stale-while-revalidate, 나머지는 캐시 우선. 배포마다 캐시 이름이 바뀌고 옛 캐시는 삭제
   - 운영 빌드에서만 등록. 로컬 운영 빌드로 확인: 등록·프리캐시 39개, 서버를 끈 상태에서 타이틀·소품까지 정상
-- [ ] Actions 경고: Node 20 액션 지원 종료 예정 → checkout/setup-node/upload-pages-artifact/deploy-pages 새 메이저 버전이 나오면 올리기
-- [ ] 번들 737KB(gzip 200KB): three.js 코드 분할 검토
+- [x] Actions 경고: Node 20 액션 지원 종료 예정 → 2026-11-01 checkout v7, setup-node v7, upload-pages-artifact v5, deploy-pages v5로 올림(engine-review). 릴리스 노트 확인: setup-node 자동 캐시는 `cache: npm` 지정으로 영향 없음, upload v4부터 dotfile 제외(dist에 없음). 실제 확인은 다음 main 푸시 때 Actions 로그
+- [x] 번들 737KB(gzip 200KB): three.js 코드 분할 검토 → 보류(2026-11-01). 서비스 워커가 배포마다 HTTP 캐시를 우회해 프리캐시를 새로 받으므로(e573912), three를 따로 떼도 배포당 다시 받는 양이 줄지 않음. 줄이려면 SW가 해시 파일명을 옛 캐시에서 재사용하도록 바꾸는 게 먼저

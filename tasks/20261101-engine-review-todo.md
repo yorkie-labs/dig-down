@@ -69,3 +69,8 @@ scary-island(three.js + Rapier, JS)의 엔진·렌더링·도구를 4개 에이�
 - `settle()` 모드 재계산: 확인해 보니 `setPaused`가 시작 전·결과 화면에서 일시정지를 막고, 프레임 루프 한 곳에서 `paused`/`hitStop`/`started`를 판정한다. 꼬이는 상태 조합을 찾지 못해 리팩터 이득보다 회귀 위험이 크다
 - 적응형 DPR: 실제 폰 측정 근거가 없음. 폰 측정 후 판단
 - 눈 220개 CPU 갱신, floater 정규식: 측정상 의미 없는 크기
+
+### 다른 task 문서의 남은 항목 검토 (2026-11-01)
+- 이번 범위(엔진·렌더링·CI)와 겹치는 것: deploy-todo의 Actions 버전(올림), 번들 분할(보류, 이유는 deploy-todo)
+- 범위 밖이라 그대로 둔 것: stages-todo 2~5(체크만 안 됐을 뿐 스테이지는 이미 구현됨), studio-review2 2·3·5·15(밸런스·점수 설계, 사용자 결정 필요), render-loop 59·11·12(그림 생성 작업)
+
