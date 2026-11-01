@@ -18,8 +18,9 @@ const versionFile = (): Plugin => ({
 
 // PWA service worker: src/sw-template.js with the build id and the precache list (every file the
 // build wrote, except dev pages and local-only model copies), written as dist/sw.js.
-// dev-only hero styles (puppy-crayon/pixel/idle, ?style=) are left to the runtime cache
-const PRECACHE_SKIP = /^(dev\/|models\/)|\.map$|^version\.json$|^2d\.html$|^fonts\/OFL\.txt$|^sprites\/puppy-(crayon|pixel|idle)\.png$|^assets\/legacy-/;
+// dev-only hero styles (puppy-crayon/pixel/idle, ?style=) and the painted cliffs (?bg=paint, the
+// ice walls replaced them) are left to the runtime cache
+const PRECACHE_SKIP = /^(dev\/|models\/)|^textures\/cliff-|\.map$|^version\.json$|^2d\.html$|^fonts\/OFL\.txt$|^sprites\/puppy-(crayon|pixel|idle)\.png$|^assets\/legacy-/;
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
     const p = join(dir, f);

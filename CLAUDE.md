@@ -14,7 +14,8 @@ Mr. Driller 스타일의 브라우저 퍼즐 액션 게임(강아지가 얼음 �
 - 게임 로직은 렌더링과 분리: `src/sim.ts`, `src/game.ts`, `src/stages.ts`, `src/progress.ts`, `src/chunks.ts` — 각각 `*.test.ts`가 있음
 - 소품: `src/props3d.ts`, `src/propsCatalog.ts` / 사운드: `src/sfx.ts` / 로딩 화면: `src/loading.ts`
 - `tools/`: 에셋 준비용 Python 스크립트(스프라이트 컷아웃, 영상→시트 등)
-- 개발용 쿼리 훅이 있음(예: `?holdloading`, `?slowswing`). 화면 확인 시 활용
+- 개발용 쿼리 훅이 있음(예: `?holdloading`, `?slowswing`, `?depth=`, `?bg=paint` 옛 그림 절벽). 화면 확인 시 활용
+- 배경 절벽: `src/backdrop3d.ts` 절차 생성 로우폴리 얼음 암벽(기본값)
 
 ## 배포
 - main에 푸시 → `.github/workflows/pages.yml`이 빌드 후 Pages 배포. 즉 **main 푸시 = 공개 배포**

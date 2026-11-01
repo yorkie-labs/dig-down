@@ -1,4 +1,4 @@
-// Prototype (?bg=3d): the shaft walls as low-poly 3D ice rock instead of the painted cliff tiles,
+// The shaft walls as low-poly 3D ice rock (the painted cliff tiles stay behind ?bg=paint),
 // in the same language as the Polyfork props: flat-shaded facets on the shared two-tone toon ramp,
 // snow on the facets that face up, and inked creases at a constant screen width.
 // One segment geometry per side, SEG units tall and periodic in y, leapfrogged down the shaft by
